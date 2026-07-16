@@ -131,7 +131,7 @@
       return (
         '<article class="location-card">' +
         '<span class="location-region">' + b.region + "</span>" +
-        "<h3>비무브짐24 " + b.name + "</h3>" +
+        "<h3>" + (b.brand || "비무브짐24") + " " + b.name + "</h3>" +
         "<p>" + b.desc + "</p>" +
         (hiring ? '<span class="loc-badge">지금 채용 중</span>' : "") +
         "</article>"
