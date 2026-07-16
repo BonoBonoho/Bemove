@@ -79,6 +79,19 @@
           </div>
           <label>설명 <textarea name="desc" rows="3" placeholder="공고 설명"></textarea></label>
           <label>태그 (쉼표 구분) <input name="tags" placeholder="인센티브, 시연" /></label>
+          <label>게시 채널
+            <div class="channel-chips" id="channelChips">
+              <label class="ch"><input type="checkbox" value="사람인" />사람인</label>
+              <label class="ch"><input type="checkbox" value="잡코리아" />잡코리아</label>
+              <label class="ch"><input type="checkbox" value="알바천국" />알바천국</label>
+              <label class="ch"><input type="checkbox" value="워크넷" />워크넷</label>
+              <label class="ch"><input type="checkbox" value="인스타그램" />인스타그램</label>
+              <label class="ch"><input type="checkbox" value="당근" />당근</label>
+              <label class="ch"><input type="checkbox" value="지인 추천" />지인 추천</label>
+              <label class="ch"><input type="checkbox" value="현수막" />현수막</label>
+            </div>
+          </label>
+          <label>비고 (내부용 — 사이트에 노출되지 않음) <input name="note" placeholder="예: 주 5일 교대, 채용목표 8/15" /></label>
           <label class="chk"><input type="checkbox" name="active" checked /> 게시 상태 (끄면 사이트에서 숨김)</label>
           <div class="form-actions">
             <button type="submit" class="btn-main">저장 → 즉시 게시</button>
@@ -93,7 +106,54 @@
       <div class="panel-head">
         <h2>지원자 파이프라인 <small>지원 폼으로 접수된 지원·문의가 실시간으로 쌓입니다</small></h2>
       </div>
+
+      <div id="statsBar" class="stats-bar"></div>
+
+      <details class="guide-box">
+        <summary>🗣️ 면접 질문 가이드 <small>서류 검토 48h · 전화 연락 24h — 속도가 곧 경쟁력</small></summary>
+        <div class="guide-cols">
+          <div>
+            <h4>공통 질문</h4>
+            <ul>
+              <li>비무브짐24를 어떻게 알게 되었나요? 지원 동기는?</li>
+              <li>1년 뒤 본인의 목표는 무엇인가요?</li>
+              <li>가장 힘들었던 회원/고객 경험과 어떻게 대응했나요?</li>
+              <li>매출·목표 압박에 대해 어떻게 생각하나요?</li>
+              <li>근무 가능한 시간·요일, 통근 거리는?</li>
+              <li>장기 근속 의지가 있나요? (1년 이상)</li>
+            </ul>
+          </div>
+          <div>
+            <h4>직무별 심화</h4>
+            <ul>
+              <li><b>트레이너</b> — PT 세일즈(OT 클로징) 경험과 본인만의 방식은? 회원 이탈을 줄인 사례는?</li>
+              <li><b>FC</b> — 등록 전환을 높인 경험은? 동시에 여러 업무를 처리한 방식은?</li>
+              <li><b>지점장/팀장</b> — 팀원 동기부여·갈등 관리 경험은? 목표 미달 시 회복 방법은?</li>
+            </ul>
+            <p class="guide-tip">💡 면접 평가는 그날 바로 카드의 점수·메모에 기록하세요. 기억은 사라집니다.</p>
+          </div>
+        </div>
+      </details>
+
       <div id="kanban" class="kanban"></div>
+
+      <!-- 온보딩 체크리스트 오버레이 -->
+      <div id="obWrap" class="form-overlay" hidden>
+        <div class="job-form ob-panel">
+          <h3>🚀 입사·온보딩 체크리스트 — <span id="obName"></span></h3>
+          <div class="ob-group">
+            <h4>제출 서류</h4>
+            <div id="obDocs" class="ob-list"></div>
+          </div>
+          <div class="ob-group">
+            <h4>입사 처리 (본사/실장)</h4>
+            <div id="obTasks" class="ob-list"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="obClose" class="btn-main">닫기 (자동 저장됨)</button>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 

@@ -116,6 +116,14 @@ export const handler = async (event) => {
           const vals = {};
           if (body.status && STAGES.includes(body.status)) { sets.push("#s = :s"); vals[":s"] = body.status; }
           if (typeof body.memo === "string") { sets.push("memo = :m"); vals[":m"] = body.memo.slice(0, 2000); }
+          if (body.score !== undefined) {
+            const sc = Math.max(0, Math.min(5, Number(body.score) || 0));
+            sets.push("score = :sc"); vals[":sc"] = sc;
+          }
+          if (Array.isArray(body.onboarding)) {
+            sets.push("onboarding = :ob");
+            vals[":ob"] = body.onboarding.slice(0, 20).map((k) => String(k).slice(0, 40));
+          }
           if (!sets.length) return res(400, { error: "변경할 내용 없음" });
           sets.push("updatedAt = :u"); vals[":u"] = new Date().toISOString();
           await db.send(new UpdateCommand({
@@ -151,6 +159,8 @@ function sanitizeJob(b) {
     deadline: String(b.deadline || "").slice(0, 10),
     desc: String(b.desc || "").slice(0, 1000),
     tags: Array.isArray(b.tags) ? b.tags.slice(0, 8).map((t) => String(t).slice(0, 20)) : [],
+    channels: Array.isArray(b.channels) ? b.channels.slice(0, 10).map((c) => String(c).slice(0, 20)) : [],
+    note: String(b.note || "").slice(0, 500),
     active: b.active !== false,
   };
 }

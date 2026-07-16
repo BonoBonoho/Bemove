@@ -95,6 +95,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
   display: flex; align-items: flex-start; justify-content: center;
   padding: 60px 16px; overflow-y: auto;
 }
+/* hidden 속성이 display:flex에 덮이지 않도록 (취소/저장 시 닫힘 보장) */
+.form-overlay[hidden] { display: none; }
 .job-form {
   background: #fff; border-radius: 16px; padding: 28px;
   width: 560px; max-width: 100%;
@@ -155,6 +157,68 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
 .kb-card .kc-actions button:hover { border-color: var(--orange); color: var(--orange); }
 
 .empty-note { text-align: center; color: #9aa0a6; padding: 30px 0; }
+
+/* 현황 바 */
+.stats-bar {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.stat {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 16px; display: flex; flex-direction: column; min-width: 96px;
+}
+.stat b { font-size: 1.25rem; color: var(--charcoal); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 0.72rem; color: #82868b; font-weight: 700; }
+.stat.alert { border-color: #d63a1e; background: #fdf1ee; }
+.stat.alert b, .stat.alert span { color: #d63a1e; }
+.stat.ok { border-color: #b7dfc6; }
+.stat.ok b, .stat.ok span { color: #1c7c46; }
+
+/* 면접 가이드 */
+.guide-box {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  margin-bottom: 16px; padding: 0 18px;
+}
+.guide-box summary {
+  cursor: pointer; font-weight: 900; padding: 14px 0; font-size: 0.95rem;
+}
+.guide-box summary small { color: #9aa0a6; font-weight: 500; margin-left: 8px; }
+.guide-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 4px 0 18px; }
+.guide-cols h4 { font-size: 0.85rem; color: var(--orange-dark); margin-bottom: 8px; }
+.guide-cols ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.guide-cols li { font-size: 0.84rem; color: #4a4f55; padding-left: 14px; position: relative; }
+.guide-cols li::before { content: "·"; position: absolute; left: 2px; color: var(--orange); font-weight: 900; }
+.guide-tip { margin-top: 10px; font-size: 0.8rem; color: #8a6d3b; background: #fff8ec; border-radius: 6px; padding: 8px 10px; }
+
+/* 카드 확장 요소 */
+.kc-stars { color: #f5a623; margin-left: 6px; font-size: 0.85rem; letter-spacing: 1px; }
+.kb-card.sla-warn { border-color: #d63a1e; box-shadow: 0 0 0 1px rgba(214,58,30,0.25); }
+.warn-txt { color: #d63a1e; }
+.kc-ob {
+  background: #eef6ff; color: #2b6cb0; border-radius: 6px;
+  padding: 4px 8px; font-weight: 700; font-size: 0.75rem;
+}
+.kc-ob.done { background: #e8f8ee; color: #1c7c46; }
+
+/* 게시 채널 체크박스 */
+.channel-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.channel-chips .ch {
+  flex-direction: row !important; align-items: center; gap: 5px !important;
+  border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+  font-size: 0.8rem; font-weight: 500; cursor: pointer;
+}
+.channel-chips .ch:has(input:checked) {
+  border-color: var(--orange); background: rgba(238,99,37,0.08); font-weight: 700;
+}
+
+/* 온보딩 체크리스트 */
+.ob-panel { width: 480px; }
+.ob-group h4 { font-size: 0.85rem; color: var(--orange-dark); margin-bottom: 8px; }
+.ob-list { display: flex; flex-direction: column; gap: 7px; }
+.ob-item {
+  flex-direction: row !important; align-items: center; gap: 8px !important;
+  font-weight: 500 !important; font-size: 0.88rem !important;
+}
+.ob-item:has(input:checked) { color: #1c7c46; text-decoration: line-through; }
 
 @media (max-width: 1080px) { .kanban { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) {
