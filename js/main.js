@@ -212,7 +212,9 @@
     fetch(API + "/jobs")
       .then(function (r) { return r.json(); })
       .then(function (list) {
-        if (!Array.isArray(list)) return;
+        // 어드민에서 공고를 1건이라도 게시하면 API가 공고의 원천이 됩니다.
+        // (아직 안 올렸을 땐 data.js의 예시 공고를 유지)
+        if (!Array.isArray(list) || list.length === 0) return;
         JOBS.length = 0;
         list.forEach(function (j) { JOBS.push(j); });
         renderJobs();

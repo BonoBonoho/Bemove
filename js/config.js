@@ -5,5 +5,5 @@
      예) apiUrl: "https://abc123.execute-api.ap-northeast-2.amazonaws.com"
    ================================================================ */
 window.BEMOVE_CONFIG = {
-  apiUrl: "",
+  apiUrl: "https://fzduj45ts8.execute-api.ap-northeast-2.amazonaws.com",
 };
