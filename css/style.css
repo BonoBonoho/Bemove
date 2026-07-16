@@ -230,7 +230,7 @@ ul, ol { list-style: none; }
   fill: #6a6f75; font-size: 13px; font-weight: 700;
   font-family: var(--font-body);
 }
-.map-card .m-dot { fill: var(--orange); stroke: #fff; stroke-width: 1.5; }
+.map-card .m-dot { fill: var(--orange); stroke: #fff; stroke-width: 2; }
 .map-card .m-b {
   fill: var(--orange); font-family: var(--font-logo);
   font-size: 24px; paint-order: stroke; stroke: rgba(51, 57, 63, 0.35); stroke-width: 3px;
