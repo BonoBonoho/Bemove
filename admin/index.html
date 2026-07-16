@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>비무브짐 채용 어드민</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" href="../assets/logo-badge.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <header class="adm-header">
+    <div class="adm-brand">
+      <img src="../assets/logo-badge.png" alt="" />
+      <h1>비무브짐 채용 어드민</h1>
+    </div>
+    <div class="adm-header-right">
+      <span id="apiStatus" class="api-status">API 미설정</span>
+      <button id="logoutBtn" class="btn-sm ghost" hidden>로그아웃</button>
+    </div>
+  </header>
+
+  <!-- 로그인 -->
+  <section id="loginView" class="login-view">
+    <div class="login-card">
+      <h2>관리자 로그인</h2>
+      <p>배포 시 설정한 어드민 토큰을 입력하세요.</p>
+      <input type="password" id="tokenInput" placeholder="어드민 토큰" autocomplete="current-password" />
+      <button id="loginBtn" class="btn-main">로그인</button>
+      <p class="login-err" id="loginErr" hidden>인증에 실패했습니다. 토큰을 확인해주세요.</p>
+      <p class="login-hint">API 주소가 설정되지 않았다면 <code>js/config.js</code>의 <code>apiUrl</code>을 먼저 채워주세요.</p>
+    </div>
+  </section>
+
+  <!-- 메인 -->
+  <main id="mainView" hidden>
+    <nav class="adm-tabs">
+      <button class="tab active" data-tab="jobs">📣 공고 관리</button>
+      <button class="tab" data-tab="apps">👤 지원자 파이프라인</button>
+      <button id="refreshBtn" class="btn-sm">새로고침</button>
+    </nav>
+
+    <!-- 공고 관리 -->
+    <section id="jobsTab" class="tab-panel">
+      <div class="panel-head">
+        <h2>채용 공고 <small>저장하면 사이트에 즉시 게시됩니다</small></h2>
+        <button id="newJobBtn" class="btn-main">+ 새 공고</button>
+      </div>
+      <div id="jobList" class="job-table"></div>
+
+      <!-- 공고 편집 폼 -->
+      <div id="jobFormWrap" class="form-overlay" hidden>
+        <form id="jobForm" class="job-form">
+          <h3 id="jobFormTitle">새 공고</h3>
+          <label>공고명 <input name="title" required placeholder="트레이너 채용 — 야음점" /></label>
+          <div class="row2">
+            <label>직무
+              <select name="role">
+                <option>트레이너</option><option>FC/상담</option>
+                <option>GX 강사</option><option>청소/시설</option>
+              </select>
+            </label>
+            <label>지점 <select name="branch" id="jobBranchSel"></select></label>
+          </div>
+          <div class="row2">
+            <label>고용형태
+              <select name="type">
+                <option>프리랜서</option><option>정규직</option>
+                <option>파트타임</option><option>계약직</option>
+              </select>
+            </label>
+            <label>모집 인원 <input name="headcount" type="number" min="1" value="1" /></label>
+          </div>
+          <div class="row2">
+            <label>게시일 <input name="posted" type="date" /></label>
+            <label>마감일 <input name="deadline" type="date" required /></label>
+          </div>
+          <label>설명 <textarea name="desc" rows="3" placeholder="공고 설명"></textarea></label>
+          <label>태그 (쉼표 구분) <input name="tags" placeholder="인센티브, 시연" /></label>
+          <label class="chk"><input type="checkbox" name="active" checked /> 게시 상태 (끄면 사이트에서 숨김)</label>
+          <div class="form-actions">
+            <button type="submit" class="btn-main">저장 → 즉시 게시</button>
+            <button type="button" id="jobCancelBtn" class="btn-sm ghost">취소</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 지원자 파이프라인 -->
+    <section id="appsTab" class="tab-panel" hidden>
+      <div class="panel-head">
+        <h2>지원자 파이프라인 <small>지원 폼으로 접수된 지원·문의가 실시간으로 쌓입니다</small></h2>
+      </div>
+      <div id="kanban" class="kanban"></div>
+    </section>
+  </main>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

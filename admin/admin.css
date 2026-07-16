@@ -1,0 +1,163 @@
+/* ================================================================
+   비무브짐 채용 어드민 스타일
+   ================================================================ */
+:root {
+  --orange: #ee6325; --orange-dark: #d4531a;
+  --charcoal: #33393f; --deep: #23272c;
+  --line: #e4e1dd; --gray: #f5f4f2;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Noto Sans KR", sans-serif; color: #1f2226;
+  background: var(--gray); min-height: 100vh;
+}
+button { cursor: pointer; font-family: inherit; }
+
+/* 헤더 */
+.adm-header {
+  background: var(--deep); color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 22px; border-bottom: 2px solid var(--orange);
+  position: sticky; top: 0; z-index: 50;
+}
+.adm-brand { display: flex; align-items: center; gap: 10px; }
+.adm-brand img { width: 36px; height: 36px; }
+.adm-brand h1 { font-family: "Black Han Sans", sans-serif; font-weight: 400; font-size: 1.15rem; }
+.adm-header-right { display: flex; align-items: center; gap: 12px; }
+.api-status { font-size: 0.78rem; color: #9aa0a6; }
+.api-status.ok { color: #35c76f; }
+
+/* 버튼 */
+.btn-main {
+  background: var(--orange); color: #fff; border: 0;
+  padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 0.95rem;
+}
+.btn-main:hover { background: var(--orange-dark); }
+.btn-sm {
+  background: var(--charcoal); color: #fff; border: 0;
+  padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700;
+}
+.btn-sm.ghost { background: transparent; border: 1px solid #9aa0a6; color: #6a6f75; }
+.adm-header .btn-sm.ghost { color: #cfd2d5; }
+
+/* 로그인 */
+.login-view { display: flex; justify-content: center; padding: 90px 20px; }
+.login-card {
+  background: #fff; border-radius: 16px; padding: 36px 32px;
+  width: 380px; box-shadow: 0 14px 40px rgba(35,39,44,0.12);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.login-card h2 { font-family: "Black Han Sans", sans-serif; font-weight: 400; }
+.login-card p { font-size: 0.88rem; color: #6a6f75; }
+.login-card input {
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 14px;
+  font-size: 0.95rem;
+}
+.login-card input:focus { outline: none; border-color: var(--orange); }
+.login-err { color: #d63a1e; font-weight: 700; }
+.login-hint { font-size: 0.78rem !important; color: #9aa0a6 !important; }
+.login-hint code { background: var(--gray); padding: 1px 6px; border-radius: 4px; }
+
+/* 탭 */
+main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
+.adm-tabs { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
+.tab {
+  background: #fff; border: 1.5px solid var(--line); border-radius: 999px;
+  padding: 9px 20px; font-weight: 700; font-size: 0.92rem; color: #6a6f75;
+}
+.tab.active { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
+#refreshBtn { margin-left: auto; }
+
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.panel-head h2 { font-family: "Black Han Sans", sans-serif; font-weight: 400; font-size: 1.3rem; }
+.panel-head small { font-size: 0.78rem; color: #9aa0a6; font-family: "Noto Sans KR"; margin-left: 8px; }
+
+/* 공고 테이블 */
+.job-table { display: flex; flex-direction: column; gap: 10px; }
+.job-row {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.job-row.inactive { opacity: 0.55; }
+.job-row .jr-title { font-weight: 900; flex: 1; min-width: 220px; }
+.job-row .jr-badge {
+  font-size: 0.74rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  background: rgba(238,99,37,0.12); color: var(--orange-dark);
+}
+.job-row .jr-badge.gray { background: rgba(51,57,63,0.08); color: var(--charcoal); }
+.job-row .jr-badge.off { background: #eee; color: #999; }
+.job-row .jr-meta { font-size: 0.8rem; color: #82868b; }
+.job-row .jr-actions { display: flex; gap: 6px; }
+
+/* 공고 폼 */
+.form-overlay {
+  position: fixed; inset: 0; background: rgba(20,22,25,0.5); z-index: 60;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 60px 16px; overflow-y: auto;
+}
+.job-form {
+  background: #fff; border-radius: 16px; padding: 28px;
+  width: 560px; max-width: 100%;
+  display: flex; flex-direction: column; gap: 13px;
+}
+.job-form h3 { font-family: "Black Han Sans", sans-serif; font-weight: 400; font-size: 1.25rem; }
+.job-form label { font-size: 0.85rem; font-weight: 700; display: flex; flex-direction: column; gap: 5px; }
+.job-form input, .job-form select, .job-form textarea {
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  font-size: 0.92rem; font-family: inherit;
+}
+.job-form input:focus, .job-form select:focus, .job-form textarea:focus {
+  outline: none; border-color: var(--orange);
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.chk { flex-direction: row !important; align-items: center; gap: 8px !important; }
+.form-actions { display: flex; gap: 10px; margin-top: 6px; }
+
+/* 칸반 */
+.kanban {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
+  align-items: start;
+}
+.kb-col {
+  background: #ecebe8; border-radius: 12px; padding: 12px;
+  display: flex; flex-direction: column; gap: 10px; min-height: 160px;
+}
+.kb-col h3 {
+  font-size: 0.85rem; font-weight: 900; color: var(--charcoal);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.kb-col h3 .cnt {
+  background: var(--charcoal); color: #fff; border-radius: 999px;
+  font-size: 0.7rem; padding: 1px 8px;
+}
+.kb-col.col-done h3 { color: #1c7c46; }
+.kb-col.col-fail h3 { color: #9aa0a6; }
+.kb-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px; font-size: 0.82rem; display: flex; flex-direction: column; gap: 6px;
+}
+.kb-card .kc-name { font-weight: 900; font-size: 0.92rem; }
+.kb-card .kc-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+.kb-card .kc-badges span {
+  font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  background: rgba(238,99,37,0.12); color: var(--orange-dark);
+}
+.kb-card .kc-badges span.gray { background: rgba(51,57,63,0.08); color: var(--charcoal); }
+.kb-card .kc-phone a { color: var(--orange-dark); font-weight: 700; text-decoration: none; }
+.kb-card .kc-msg { color: #6a6f75; white-space: pre-wrap; word-break: break-all; max-height: 72px; overflow: hidden; }
+.kb-card .kc-memo { background: #fff8ec; border-radius: 6px; padding: 6px 8px; color: #8a6d3b; }
+.kb-card .kc-date { color: #b0b4b8; font-size: 0.7rem; }
+.kb-card .kc-actions { display: flex; gap: 4px; }
+.kb-card .kc-actions button {
+  border: 1px solid var(--line); background: #fff; border-radius: 6px;
+  font-size: 0.72rem; padding: 4px 8px; font-weight: 700; color: #55595e;
+}
+.kb-card .kc-actions button:hover { border-color: var(--orange); color: var(--orange); }
+
+.empty-note { text-align: center; color: #9aa0a6; padding: 30px 0; }
+
+@media (max-width: 1080px) { .kanban { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) {
+  .kanban { grid-template-columns: 1fr; }
+  .row2 { grid-template-columns: 1fr; }
+}

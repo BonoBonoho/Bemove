@@ -4,11 +4,19 @@
 [비무브짐24 채용 시스템 노션 페이지](https://selective-tangelo-29b.notion.site/39511492e62280e5a51dcbbd7cf9ed52)의
 채용 원칙·프로세스·직무별 JD와 [bemovegym.com](https://bemovegym.com/) 브랜드를 기반으로 제작했습니다.
 
+> 🚀 **실서비스(AWS) 운영**: 어드민에서 공고를 게시하고 지원자를 파이프라인으로 관리하려면
+> [DEPLOY.md](DEPLOY.md) 가이드를 따라 백엔드를 배포하세요. `js/config.js`의 `apiUrl`이
+> 비어 있으면 아래 정적 모드(data.js + 이메일 지원)로 동작합니다.
+
 ## 구성
 
 | 파일 | 설명 |
 |---|---|
-| `index.html` | 단일 페이지 사이트 (히어로 / 브랜드 / 인재상 / 채용공고 / 직무안내 / 채용절차 / 지점 / FAQ / 지원 폼) |
+| `index.html` | 단일 페이지 사이트 (히어로 / 브랜드 / 인재상 / 채용공고 / 직무안내 / 보상제도 / 복리후생 / 채용절차 / 지점 / FAQ / 지원 폼) |
+| `admin/` | 채용 어드민 (공고 게시·수정, 지원자 파이프라인 칸반) — API 배포 후 사용 |
+| `backend/` + `infra/` | AWS Lambda API와 배포 스크립트 ([DEPLOY.md](DEPLOY.md)) |
+| `banners/` | 메타 광고 배너 시안 3종 (1080×1080 PNG + HTML 원본) |
+| `js/config.js` | API 주소 설정 (비우면 정적 모드) |
 | `css/style.css` | 브랜드 스타일 (오렌지 `#EE6325` × 차콜 `#33393F`, 로고 SVG 배지 포함) |
 | `js/data.js` | **채용 공고·지점 데이터** — 공고 추가/수정은 이 파일만 고치면 됩니다 |
 | `js/main.js` | 공고 필터링, D-day 계산, 지점 렌더링, 지원 폼(mailto) 처리 |

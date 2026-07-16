@@ -5,6 +5,7 @@
   "use strict";
 
   var APPLY_EMAIL = "bonoxbonho@gmail.com";
+  var API = (window.BEMOVE_CONFIG || {}).apiUrl || "";
 
   /* ---------- 모바일 내비게이션 ---------- */
   var navToggle = document.getElementById("navToggle");
@@ -151,14 +152,39 @@
     branchSelect.appendChild(anyOpt);
   }
 
-  /* ---------- 지원 폼 → mailto ---------- */
+  /* ---------- 지원 폼 → API 접수 (미설정 시 mailto) ---------- */
   document.getElementById("applyForm").addEventListener("submit", function (e) {
     e.preventDefault();
+    var form = e.target;
     var name = document.getElementById("fName").value.trim();
     var phone = document.getElementById("fPhone").value.trim();
     var role = document.getElementById("fRole").value;
     var branch = document.getElementById("fBranch").value;
     var msg = document.getElementById("fMsg").value.trim();
+
+    if (API) {
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = "접수 중...";
+      fetch(API + "/applications", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name: name, phone: phone, role: role, branch: branch, message: msg }),
+      })
+        .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+        .then(function () {
+          form.reset();
+          alert("지원서가 접수되었습니다!\n서류 검토 후 48시간 이내에 연락드리겠습니다.");
+        })
+        .catch(function () {
+          alert("접수 중 문제가 발생했습니다. 잠시 후 다시 시도하거나 이메일로 지원해주세요.");
+        })
+        .finally(function () {
+          btn.disabled = false;
+          btn.textContent = "지원서 보내기";
+        });
+      return;
+    }
 
     var subject = "[비무브짐 지원] " + role + " / " + branch + " — " + name;
     var body =
@@ -180,4 +206,18 @@
   renderChips("branchChips", BRANCHES.map(function (b) { return b.name; }), "branch");
   renderJobs();
   renderLocations();
+
+  /* ---------- API 공고 로드 (어드민에서 게시한 공고 자동 반영) ---------- */
+  if (API) {
+    fetch(API + "/jobs")
+      .then(function (r) { return r.json(); })
+      .then(function (list) {
+        if (!Array.isArray(list)) return;
+        JOBS.length = 0;
+        list.forEach(function (j) { JOBS.push(j); });
+        renderJobs();
+        renderLocations();
+      })
+      .catch(function () { /* API 실패 시 data.js 정적 공고 유지 */ });
+  }
 })();
