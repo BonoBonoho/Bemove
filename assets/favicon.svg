@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <polygon points="140,58 372,58 464,250 344,442 168,442 48,250"
+           fill="#33393F" stroke="#EE6325" stroke-width="26" stroke-linejoin="round"/>
+  <text x="256" y="250" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="200" fill="#EE6325">M</text>
+  <text x="160" y="380" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="170" fill="#EE6325">B</text>
+  <text x="354" y="380" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="170" fill="#EE6325">G</text>
+</svg>
