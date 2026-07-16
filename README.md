@@ -12,7 +12,10 @@
 | `css/style.css` | 브랜드 스타일 (오렌지 `#EE6325` × 차콜 `#33393F`, 로고 SVG 배지 포함) |
 | `js/data.js` | **채용 공고·지점 데이터** — 공고 추가/수정은 이 파일만 고치면 됩니다 |
 | `js/main.js` | 공고 필터링, D-day 계산, 지점 렌더링, 지원 폼(mailto) 처리 |
-| `assets/favicon.svg` | BMG 헥사곤 배지 파비콘 |
+| `assets/logo-badge.png` | BMG 헥사곤 배지 (헤더·푸터·파비콘) |
+| `assets/logo-full.png` | 배지 + 워드마크 조합 (히어로) |
+| `assets/logo-wordmark.png` | BE:MOVE GYM 워드마크 (예비) |
+| `assets/favicon.svg` | SVG 재현본 파비콘 (예비) |
 
 ## 공고 관리 방법
 
