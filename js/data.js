@@ -6,6 +6,7 @@
 // 지점 정보
 const BRANCHES = [
   { id: "yaeum",   name: "야음점",  region: "울산 남구",  desc: "수암로128번길 14, 수암회센터 4층 · 24시 운영, GX 스튜디오 보유" },
+  { id: "daldong", name: "어반 달동점", region: "울산 남구", desc: "달동 도심 상권 · 어반 컨셉 10호점" },
   { id: "byeongyeong", name: "병영점", region: "울산 중구", desc: "병영 생활권 중심 상권 · 24시 운영" },
   { id: "guyeong", name: "구영리점", region: "울산 울주군", desc: "구영로 104, 우리은행 건물 4~5층 · 구영리 최대 규모, GX 스튜디오 보유" },
   { id: "cheongok", name: "천곡점", region: "울산 북구",  desc: "달천로 11, 5층 · 천곡 유일 24시 헬스장, 주차 4시간 무료" },
