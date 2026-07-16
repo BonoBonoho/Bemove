@@ -8,6 +8,9 @@
   var API = (window.BEMOVE_CONFIG || {}).apiUrl || "";
   var STAGES = ["신규 접수", "전화 스크리닝", "면접·실기", "최종·처우협의", "합격·입사", "불합격"];
   var token = sessionStorage.getItem("bemoveAdminToken") || "";
+  // data.js의 const 선언은 window 속성이 아니므로 typeof로 안전하게 참조
+  var SITE_BRANCHES = typeof BRANCHES !== "undefined" ? BRANCHES : [];
+  var SITE_JOBS = typeof JOBS !== "undefined" ? JOBS : [];
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -82,7 +85,7 @@
 
   // 지점 옵션 (data.js의 BRANCHES 재사용)
   var branchSel = $("jobBranchSel");
-  (window.BRANCHES || []).forEach(function (b) {
+  SITE_BRANCHES.forEach(function (b) {
     var o = document.createElement("option");
     o.value = b.name; o.textContent = b.name + " (" + b.region + ")";
     branchSel.appendChild(o);
@@ -100,7 +103,7 @@
     var box = $("jobList");
     if (!jobs.length) {
       box.innerHTML = '<p class="empty-note">공고가 없습니다. "+ 새 공고"로 첫 공고를 게시하거나,<br/><br/>' +
-        '<button id="seedBtn" class="btn-main">🧪 예시 데이터 불러오기 (공고 ' + (window.JOBS || []).length + '건 + 시연용 지원자 3명)</button></p>';
+        '<button id="seedBtn" class="btn-main">🧪 예시 데이터 불러오기 (공고 ' + SITE_JOBS.length + '건 + 시연용 지원자 3명)</button></p>';
       var sb = document.getElementById("seedBtn");
       if (sb) sb.addEventListener("click", seedDemo);
       return;
@@ -120,6 +123,7 @@
         (j.note ? " · 📝 " + esc(j.note) : "") + "</span>" +
         '<span class="jr-actions">' +
         '<button class="btn-sm" data-edit="' + j.id + '">수정</button>' +
+        '<button class="btn-sm ghost" data-copy="' + j.id + '">공고문 복사</button>' +
         '<button class="btn-sm ghost" data-del="' + j.id + '">삭제</button>' +
         "</span></div>";
     }).join("");
@@ -128,11 +132,45 @@
   $("jobList").addEventListener("click", function (e) {
     var ed = e.target.closest("[data-edit]");
     var del = e.target.closest("[data-del]");
+    var cp = e.target.closest("[data-copy]");
     if (ed) openJobForm(jobs.find(function (j) { return j.id === ed.dataset.edit; }));
+    if (cp) copyJobText(jobs.find(function (j) { return j.id === cp.dataset.copy; }));
     if (del && confirm("이 공고를 삭제할까요? 사이트에서 즉시 내려갑니다.")) {
       call("DELETE", "/admin/jobs/" + del.dataset.del).then(loadJobs);
     }
   });
+
+  /* 채널 게시용 공고문 생성·복사 (알바천국/사람인/인스타 등에 붙여넣기) */
+  function copyJobText(j) {
+    if (!j) return;
+    var siteUrl = location.origin + "/";
+    var payLine = j.role === "트레이너"
+      ? "■ 보상: 영업지원금 + 인센티브 (페이롤 Type-A/B 본인 선택, 월 500~1,000만원 가능)\n"
+      : "";
+    var text =
+      "[비무브짐24] " + j.title + "\n\n" +
+      "■ 직무: " + j.role + "\n" +
+      "■ 근무지: 비무브짐24 " + j.branch + "\n" +
+      "■ 고용형태: " + j.type + " / 모집 " + j.headcount + "명\n" +
+      "■ 마감: " + (j.deadline || "채용 시 마감") + "\n" +
+      payLine +
+      (j.desc ? "\n" + j.desc + "\n" : "") +
+      "\n✔ 서류 검토 48시간 이내, 연락 24시간 이내 약속드립니다.\n" +
+      "✔ 지원하기: " + siteUrl + " (지원 폼 작성 1분)\n\n" +
+      "#비무브짐 #BEMOVEGYM #성과보상제 #월급여500만원이상";
+    // http 환경에서는 clipboard API가 없으므로 textarea 폴백 사용
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      alert("공고문이 복사되었습니다!\n알바천국·사람인·인스타그램 등록 화면에 붙여넣으세요.\n\n게시 후에는 공고 수정에서 '게시 채널'을 체크해 관리하세요.");
+    } catch (err) {
+      prompt("아래 내용을 직접 복사하세요:", text);
+    }
+    document.body.removeChild(ta);
+  }
 
   $("newJobBtn").addEventListener("click", function () { openJobForm(null); });
   $("jobCancelBtn").addEventListener("click", function () { $("jobFormWrap").hidden = true; });
@@ -328,15 +366,28 @@
   });
 
   /* ---------- 시연용 예시 데이터 ---------- */
+  var importBtn = $("importBtn");
+  if (importBtn) importBtn.addEventListener("click", seedDemo);
+
   function seedDemo() {
-    if (!confirm("사이트의 예시 공고와 시연용 지원자를 불러올까요?\n공고는 저장 즉시 사이트에 게시됩니다.")) return;
-    var jobPosts = (window.JOBS || []).map(function (j) {
+    // 이미 등록된 공고와 같은 제목은 건너뛰어 중복 방지
+    var existing = jobs.map(function (j) { return j.title; });
+    var toImport = SITE_JOBS.filter(function (j) {
+      return existing.indexOf(j.title) === -1;
+    });
+    if (!toImport.length) {
+      alert("홈페이지 예시 공고가 이미 모두 등록되어 있습니다.");
+      return;
+    }
+    if (!confirm("홈페이지 예시 공고 " + toImport.length + "건과 시연용 지원자를 불러올까요?\n공고는 저장 즉시 사이트에 게시됩니다.")) return;
+    var jobPosts = toImport.map(function (j) {
       return call("POST", "/admin/jobs", {
         title: j.title, role: j.role, branch: j.branch, type: j.type,
         headcount: j.headcount, posted: j.posted, deadline: j.deadline,
         desc: j.desc, tags: j.tags || [], active: true,
       });
     });
+    var existingNames = apps.map(function (a) { return a.name; });
     var demoApps = [
       { name: "김성장 (예시)", phone: "010-1111-2222", role: "트레이너 (PT)", branch: "상인점",
         message: "3년차 트레이너입니다. OT→PT 전환율에 자신 있습니다. 생활스포츠지도사 2급 보유.", to: "전화 스크리닝" },
@@ -344,7 +395,7 @@
         message: "콜센터 상담 2년 경력. 등록 전환 상담에 강합니다. 주말 근무 가능합니다.", to: "면접·실기" },
       { name: "이지원 (예시)", phone: "010-5555-6666", role: "GX 강사", branch: "구영리점",
         message: "요가·필라테스 자격 보유, 주 3회 저녁 수업 희망합니다.", to: null },
-    ];
+    ].filter(function (a) { return existingNames.indexOf(a.name) === -1; });
     Promise.all(jobPosts)
       .then(function () {
         return demoApps.reduce(function (p, a) {
@@ -354,10 +405,9 @@
               headers: { "content-type": "application/json" },
               body: JSON.stringify({ name: a.name, phone: a.phone, role: a.role, branch: a.branch, message: a.message }),
             }).then(function (r) { return r.json(); }).then(function (res) {
-              var updates = [];
-              if (a.to) updates.push(call("PUT", "/admin/applications/" + res.id, { status: a.to }));
-              updates.push(call("PUT", "/admin/applications/" + res.id, { memo: "시연용 예시 데이터입니다" }));
-              return Promise.all(updates);
+              var patch = { memo: "시연용 예시 데이터입니다" };
+              if (a.to) patch.status = a.to;
+              return call("PUT", "/admin/applications/" + res.id, patch);
             });
           });
         }, Promise.resolve());

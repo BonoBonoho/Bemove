@@ -71,6 +71,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
 #refreshBtn { margin-left: auto; }
 
 .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.panel-actions { display: flex; align-items: center; gap: 8px; }
 .panel-head h2 { font-family: "Black Han Sans", sans-serif; font-weight: 400; font-size: 1.3rem; }
 .panel-head small { font-size: 0.78rem; color: #9aa0a6; font-family: "Noto Sans KR"; margin-left: 8px; }
 
@@ -117,10 +118,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
 .chk { flex-direction: row !important; align-items: center; gap: 8px !important; }
 .form-actions { display: flex; gap: 10px; margin-top: 6px; }
 
-/* 칸반 */
+/* 칸반 — 열 최소 폭을 보장하고 넘치면 가로 스크롤 */
 .kanban {
-  display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
-  align-items: start;
+  display: grid; grid-auto-flow: column;
+  grid-auto-columns: minmax(250px, 1fr);
+  gap: 12px; align-items: start;
+  overflow-x: auto; padding-bottom: 10px;
 }
 .kb-col {
   background: #ecebe8; border-radius: 12px; padding: 12px;
@@ -151,10 +154,11 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
 .kb-card .kc-msg { color: #6a6f75; white-space: pre-wrap; word-break: break-all; max-height: 72px; overflow: hidden; }
 .kb-card .kc-memo { background: #fff8ec; border-radius: 6px; padding: 6px 8px; color: #8a6d3b; }
 .kb-card .kc-date { color: #b0b4b8; font-size: 0.7rem; }
-.kb-card .kc-actions { display: flex; gap: 4px; }
+.kb-card .kc-actions { display: flex; gap: 5px; flex-wrap: wrap; }
 .kb-card .kc-actions button {
-  border: 1px solid var(--line); background: #fff; border-radius: 6px;
-  font-size: 0.72rem; padding: 4px 8px; font-weight: 700; color: #55595e;
+  border: 1px solid var(--line); background: #fff; border-radius: 999px;
+  font-size: 0.78rem; padding: 6px 12px; font-weight: 700; color: #55595e;
+  white-space: nowrap; flex: none;
 }
 .kb-card .kc-actions button:hover { border-color: var(--orange); color: var(--orange); }
 
@@ -222,8 +226,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
 }
 .ob-item:has(input:checked) { color: #1c7c46; text-decoration: line-through; }
 
-@media (max-width: 1080px) { .kanban { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) {
-  .kanban { grid-template-columns: 1fr; }
   .row2 { grid-template-columns: 1fr; }
+  .panel-head { flex-direction: column; align-items: flex-start; gap: 10px; }
 }

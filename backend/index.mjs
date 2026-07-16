@@ -126,12 +126,14 @@ export const handler = async (event) => {
           }
           if (!sets.length) return res(400, { error: "변경할 내용 없음" });
           sets.push("updatedAt = :u"); vals[":u"] = new Date().toISOString();
-          await db.send(new UpdateCommand({
+          const params = {
             TableName: APPS_TABLE, Key: { id },
             UpdateExpression: "SET " + sets.join(", "),
-            ExpressionAttributeNames: { "#s": "status" },
             ExpressionAttributeValues: vals,
-          }));
+          };
+          // #s(status)를 실제로 사용할 때만 이름 매핑 포함 (미사용 시 DynamoDB 오류)
+          if (vals[":s"] !== undefined) params.ExpressionAttributeNames = { "#s": "status" };
+          await db.send(new UpdateCommand(params));
           return res(200, { ok: true });
         }
         if (method === "DELETE") {
