@@ -162,6 +162,45 @@ ul, ol { list-style: none; }
 .section-desc { color: #6a6f75; max-width: 620px; margin-bottom: 40px; }
 .section-dark .section-desc { color: #b9bec3; }
 
+/* ---------- 브랜드 스토리 ---------- */
+.brand-story {
+  border-left: 4px solid var(--orange);
+  background: var(--gray-bg);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 22px 26px; margin-top: 8px;
+}
+.brand-story-line { font-size: 1.12rem; font-weight: 700; }
+.brand-story-line strong { font-family: var(--font-logo); color: var(--orange); font-weight: 400; }
+.brand-story-line em { font-style: normal; color: var(--charcoal); }
+.brand-story-sub { margin-top: 6px; color: #6a6f75; font-size: 0.95rem; }
+
+/* ---------- 성장 타임라인 ---------- */
+.growth { margin-top: 46px; }
+.growth-title {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.3rem; margin-bottom: 18px;
+}
+.growth-steps { display: flex; gap: 10px; flex-wrap: wrap; }
+.growth-steps li {
+  flex: 1; min-width: 170px;
+  background: var(--charcoal); color: var(--white);
+  padding: 18px 22px 18px 34px;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 16px 50%);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.growth-steps li:first-child {
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+  padding-left: 26px;
+}
+.growth-steps li strong {
+  font-family: var(--font-logo); color: var(--orange);
+  font-size: 1.15rem; letter-spacing: 0.04em;
+}
+.growth-steps li span { font-size: 0.86rem; color: #cfd2d5; font-weight: 700; }
+.growth-steps li.now { background: var(--orange); }
+.growth-steps li.now strong { color: var(--white); }
+.growth-steps li.now span { color: rgba(255, 255, 255, 0.9); }
+
 /* ---------- 브랜드 소개 ---------- */
 .about-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
@@ -179,6 +218,23 @@ ul, ol { list-style: none; }
 .about-icon { font-size: 2rem; margin-bottom: 14px; }
 .about-card h3 { font-size: 1.12rem; margin-bottom: 10px; font-weight: 900; }
 .about-card p { font-size: 0.92rem; color: #5c6167; }
+
+/* ---------- 크루 인용문 ---------- */
+.crew-quote {
+  border: 1px solid rgba(238, 99, 37, 0.4);
+  background: rgba(238, 99, 37, 0.07);
+  border-radius: var(--radius);
+  padding: 28px 30px; margin-bottom: 34px;
+}
+.crew-quote p {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem); line-height: 1.4;
+}
+.crew-quote p strong { color: var(--orange); font-weight: 400; }
+.crew-quote cite {
+  display: block; margin-top: 10px; font-style: normal;
+  color: #b9bec3; font-size: 0.95rem;
+}
 
 /* ---------- 인재상 ---------- */
 .culture-grid {
@@ -361,6 +417,82 @@ ul, ol { list-style: none; }
 }
 .pay-note { margin-top: 26px; font-size: 0.88rem; color: #82868b; }
 
+/* 실제 급여 지급 내역 */
+.pay-proof {
+  margin-top: 40px; border-radius: 18px;
+  background:
+    radial-gradient(ellipse 640px 320px at 12% 0%, rgba(238, 99, 37, 0.14), transparent 60%),
+    var(--charcoal);
+  color: var(--white); padding: 38px 34px;
+}
+.pay-proof h3 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.5rem; margin-bottom: 10px;
+}
+.proof-desc { color: #cfd2d5; font-size: 0.95rem; margin-bottom: 22px; }
+.proof-list { display: flex; flex-wrap: wrap; gap: 12px; }
+.proof-list li {
+  font-family: var(--font-display); font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  color: var(--orange);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(238, 99, 37, 0.35);
+  border-radius: 12px; padding: 12px 20px;
+}
+.proof-list small { font-size: 0.65em; color: #e2e4e6; margin-left: 2px; }
+.proof-note {
+  margin-top: 22px; font-size: 0.95rem; color: #cfd2d5;
+  border-top: 1px dashed rgba(255, 255, 255, 0.18); padding-top: 18px;
+}
+.proof-note strong { color: var(--orange); }
+
+/* 보상 비전 인용문 */
+.pay-vision { margin-top: 40px; text-align: center; }
+.pay-vision p {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem); line-height: 1.5;
+}
+.pay-vision p strong { color: var(--orange); font-weight: 400; }
+.hashtags {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  margin-top: 18px;
+}
+.hashtags span {
+  background: var(--charcoal); color: var(--white);
+  font-weight: 700; font-size: 0.88rem;
+  padding: 7px 16px; border-radius: 999px;
+}
+
+/* ---------- 복리후생 ---------- */
+.benefit-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px;
+}
+.benefit-card {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 24px 12px;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.benefit-card:hover {
+  transform: translateY(-4px); border-color: var(--orange); box-shadow: var(--shadow);
+}
+.benefit-icon { font-size: 1.9rem; }
+.benefit-card h3 { font-size: 0.95rem; font-weight: 900; }
+.benefit-lines {
+  margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 30px;
+  max-width: 760px;
+}
+.benefit-lines li {
+  position: relative; padding-left: 24px; font-size: 0.98rem; color: #4a4f55;
+}
+.benefit-lines li::before {
+  content: "✓"; position: absolute; left: 0; top: 0;
+  color: var(--orange); font-weight: 900;
+}
+.benefit-lines strong { color: var(--ink); }
+
 /* ---------- 채용 절차 ---------- */
 .process-steps {
   display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px;
@@ -522,6 +654,7 @@ ul, ol { list-style: none; }
   .hero-actions, .hero-stats { justify-content: center; }
   .about-grid, .culture-grid { grid-template-columns: repeat(2, 1fr); }
   .process-steps { grid-template-columns: repeat(2, 1fr); }
+  .benefit-grid { grid-template-columns: repeat(3, 1fr); }
   .location-grid { grid-template-columns: repeat(2, 1fr); }
   .apply-inner { grid-template-columns: 1fr; gap: 40px; }
   .footer-inner { flex-direction: column; text-align: center; }
@@ -544,6 +677,12 @@ ul, ol { list-style: none; }
   .pc-br { display: none; }
   .job-list { grid-template-columns: 1fr; }
   .pay-grid { grid-template-columns: 1fr; }
+  .benefit-grid { grid-template-columns: repeat(2, 1fr); }
+  .benefit-lines { grid-template-columns: 1fr; }
+  .growth-steps { flex-direction: column; }
+  .growth-steps li, .growth-steps li:first-child {
+    clip-path: none; border-radius: 10px; padding: 16px 20px;
+  }
   .form-split { flex-direction: column; }
   .section { padding: 64px 0; }
   .hero { padding: 64px 0 56px; }
