@@ -1,0 +1,48 @@
+name: AWS 자동 배포
+
+# 이 브랜치에 푸시될 때마다 사이트(S3)와 백엔드(Lambda)를 자동 배포합니다.
+on:
+  push:
+    branches:
+      - main
+      - claude/bemove-gym-recruitment-site-apprtq
+  workflow_dispatch: {}
+
+env:
+  AWS_REGION: ap-northeast-2
+  SITE_BUCKET: bemove-recruit-site-624627264933
+  LAMBDA_NAME: bemove-recruit-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: AWS 자격 증명 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 사이트 업로드 (S3)
+        run: |
+          aws s3 sync . "s3://$SITE_BUCKET" \
+            --exclude ".git/*" --exclude ".github/*" \
+            --exclude "backend/*" --exclude "infra/*" \
+            --exclude "banners/*.html" --exclude "*.md" --delete
+
+      - name: 백엔드 갱신 (Lambda)
+        run: |
+          cd backend && zip -q -r /tmp/backend.zip index.mjs
+          aws lambda update-function-code \
+            --function-name "$LAMBDA_NAME" \
+            --zip-file fileb:///tmp/backend.zip >/dev/null
+          echo "Lambda 코드 갱신 완료"
+
+      - name: 배포 결과
+        run: |
+          echo "✅ 배포 완료"
+          echo "사이트: http://$SITE_BUCKET.s3-website.$AWS_REGION.amazonaws.com"
