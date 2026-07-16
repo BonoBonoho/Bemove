@@ -7,6 +7,8 @@
   --line: #e4e1dd; --gray: #f5f4f2;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/* hidden 속성은 어떤 display 지정보다 우선 (로그인/오버레이 닫힘 보장) */
+[hidden] { display: none !important; }
 body {
   font-family: "Noto Sans KR", sans-serif; color: #1f2226;
   background: var(--gray); min-height: 100vh;
