@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>비무브짐24 배너 A</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Alfa+Slab+One&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:1080px; height:1080px; overflow:hidden; }
+body { font-family:'Noto Sans KR', sans-serif; }
+.bhs { font-family:'Black Han Sans', sans-serif; font-weight:400; }
+.slab { font-family:'Alfa Slab One', serif; font-weight:400; }
+.orange { color:#ee6325; }
+.canvas { width:1080px; height:1080px; position:relative; display:flex; flex-direction:column; }
+
+.canvas {
+  background:
+    radial-gradient(ellipse 760px 500px at 88% 8%, rgba(238,99,37,.22), transparent 62%),
+    linear-gradient(158deg, #1e2226 0%, #33393f 62%, #3d434a 100%);
+  color:#fff; padding:64px 72px 56px;
+}
+.top { display:flex; align-items:center; gap:22px; }
+.top img { width:96px; height:96px; }
+.top .word { font-size:40px; letter-spacing:.02em; color:#fff; }
+.top .word em { font-style:normal; color:#ee6325; }
+.eyebrow { margin-top:48px; color:#ee6325; letter-spacing:.24em; font-size:26px; }
+h1 { font-size:104px; line-height:1.14; margin-top:14px; }
+h1 span { color:#ee6325; }
+.steps { display:flex; gap:12px; margin-top:46px; }
+.steps div {
+  flex:1; background:#22262b; padding:26px 20px 26px 40px; color:#cfd2d5;
+  clip-path:polygon(0 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%, 20px 50%);
+}
+.steps div:first-child { clip-path:polygon(0 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%); padding-left:30px; }
+.steps div.now { background:#ee6325; color:#fff; }
+.steps b { display:block; font-family:'Alfa Slab One'; font-weight:400; font-size:30px; color:#ee6325; margin-bottom:4px; }
+.steps div.now b { color:#fff; }
+.steps span { font-size:23px; font-weight:700; }
+.quote { margin-top:44px; font-size:34px; color:#e2e4e6; }
+.quote strong { color:#ee6325; }
+.tags { margin-top:auto; display:flex; gap:14px; }
+.tags span { background:rgba(255,255,255,.1); border:1.5px solid rgba(238,99,37,.55); color:#fff; font-weight:700; font-size:27px; padding:12px 28px; border-radius:999px; }
+</style></head><body>
+<div class="canvas">
+  <div class="top">
+    <img src="logo-badge.png" alt="">
+    <p class="word slab">BE:MOVE <em>GYM 24</em></p>
+  </div>
+  <p class="eyebrow slab">RECRUIT 2026</p>
+  <h1 class="bhs">비무브짐24<br>전지점 <span>공개 채용</span></h1>
+  <div class="steps">
+    <div><b>2023</b><span>지점 3개 오픈</span></div>
+    <div><b>2024</b><span>지점 3개 오픈</span></div>
+    <div><b>2025</b><span>지점 3개 오픈</span></div>
+    <div class="now"><b>NOW</b><span>9개 지점 운영</span></div>
+  </div>
+  <p class="quote bhs">"선생님들의 <strong>성장</strong>이 곧 비무브짐의 <strong>성장</strong>입니다"</p>
+  <div class="tags"><span>#성과보상제</span><span>#월급여500만원이상</span><span>#함께성장</span></div>
+</div>
+</body></html>

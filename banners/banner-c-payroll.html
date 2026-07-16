@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>비무브짐24 배너 C</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Alfa+Slab+One&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:1080px; height:1080px; overflow:hidden; }
+body { font-family:'Noto Sans KR', sans-serif; }
+.bhs { font-family:'Black Han Sans', sans-serif; font-weight:400; }
+.slab { font-family:'Alfa Slab One', serif; font-weight:400; }
+.orange { color:#ee6325; }
+.canvas { width:1080px; height:1080px; position:relative; display:flex; flex-direction:column; }
+
+.canvas { background:#f5f4f2; color:#1f2226; padding:52px 64px 0; align-items:center; text-align:center; }
+.brand { display:flex; align-items:center; gap:15px; }
+.brand img { width:72px; height:72px; }
+.brand p { font-size:28px; } .brand em { font-style:normal; color:#ee6325; }
+h1 { font-size:84px; line-height:1.16; margin-top:26px; }
+h1 span { color:#ee6325; }
+.subs { font-size:27px; color:#55595e; margin-top:10px; font-weight:500; }
+.pair { display:flex; gap:20px; margin-top:34px; width:100%; }
+.card { flex:1; background:#fff; border:2px solid #e4e1dd; border-radius:22px; padding:30px 30px; text-align:left; }
+.card.b { border-color:#ee6325; box-shadow:0 16px 44px rgba(238,99,37,.18); position:relative; }
+.badge { position:absolute; top:-22px; right:26px; background:#ee6325; color:#fff; font-weight:900; font-size:24px; padding:8px 24px; border-radius:999px; }
+.tp { font-family:'Alfa Slab One'; font-size:23px; color:#ee6325; letter-spacing:.1em; }
+.card h2 { font-size:44px; margin:6px 0 10px; }
+.big { font-size:54px; font-variant-numeric:tabular-nums; }
+.big small { font-size:.55em; }
+.card.b .big { color:#d4531a; }
+.card ul { list-style:none; margin-top:12px; }
+.card li { font-size:25px; font-weight:500; color:#4a4f55; padding:6px 0 6px 32px; position:relative; }
+.card li::before { content:"+"; position:absolute; left:0; color:#ee6325; font-weight:900; }
+.card li b { color:#1f2226; }
+.cta {
+  margin-top:auto; width:1080px; background:#ee6325; color:#fff;
+  font-size:36px; height:96px; display:flex; align-items:center; justify-content:center;
+}
+</style></head><body>
+<div class="canvas">
+  <div class="brand"><img src="logo-badge.png" alt=""><p class="slab">BE:MOVE <em>GYM 24</em></p></div>
+  <h1 class="bhs">선생님이 직접 선택하는<br><span>페이롤 시스템</span></h1>
+  <p class="subs">안정이냐 도전이냐, 나에게 맞는 타입을 고르세요</p>
+  <div class="pair">
+    <div class="card">
+      <p class="tp">PAYROLL TYPE-A</p>
+      <h2 class="bhs">안정형</h2>
+      <p class="big bhs">200<small>만원</small></p>
+      <ul><li>월 영업지원금 <b>200만원</b></li><li>수업료 + 성과금</li><li><b>4대보험</b> 가입 가능</li></ul>
+    </div>
+    <div class="card b">
+      <span class="badge">고수익</span>
+      <p class="tp">PAYROLL TYPE-B</p>
+      <h2 class="bhs">성과형</h2>
+      <p class="big bhs">500~1,000<small>만원</small></p>
+      <ul><li>수업료 <b>최대 60%</b></li><li>매출 인센티브 <b>최대 105만원</b></li><li>분기 보너스 <b>최대 100만원</b></li></ul>
+    </div>
+  </div>
+  <div class="cta bhs">지금 바로 지원하세요 → 비무브짐24 채용</div>
+</div>
+</body></html>

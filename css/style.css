@@ -425,22 +425,74 @@ ul, ol { list-style: none; }
     var(--charcoal);
   color: var(--white); padding: 38px 34px;
 }
-.pay-proof h3 {
+.proof-flag {
+  display: inline-block;
+  background: #c9302c; color: var(--white);
   font-family: var(--font-display); font-weight: 400;
-  font-size: 1.5rem; margin-bottom: 10px;
+  font-size: 1.25rem; letter-spacing: 0.02em;
+  padding: 8px 26px; border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(201, 48, 44, 0.35);
+  margin-bottom: 16px;
 }
-.proof-desc { color: #cfd2d5; font-size: 0.95rem; margin-bottom: 22px; }
-.proof-list { display: flex; flex-wrap: wrap; gap: 12px; }
-.proof-list li {
+.proof-desc { color: #cfd2d5; font-size: 0.95rem; margin-bottom: 24px; }
+
+/* 이체 내역·뱅킹앱 캡처 재현 카드 */
+.proof-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.proof-shot {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  display: flex; flex-direction: column;
+}
+.shot-body { padding: 18px 18px 14px; flex: 1; }
+.shot-body dl { display: flex; flex-direction: column; }
+.shot-body dl div {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 10px; padding: 8px 0;
+}
+.shot-body dt { font-size: 0.82rem; }
+.shot-body dd { font-size: 0.86rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* 이체 내역서 스타일 (밝은 카드) */
+.shot-body.receipt { background: #ffffff; color: #3a3f45; }
+.shot-time {
+  font-size: 0.78rem; color: #8a8f95;
+  border-bottom: 1px solid #ececec; padding-bottom: 9px; margin-bottom: 6px;
+}
+.shot-body.receipt dl div { border-bottom: 1px solid #f4f4f4; }
+.shot-body.receipt dt { color: #8a8f95; }
+.shot-body.receipt .in { color: #3b6ef5; }
+
+/* 뱅킹앱 입금 알림 스타일 (어두운 카드) */
+.shot-body.bankapp { background: #15171d; color: #f2f3f5; }
+.shot-org {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.84rem; color: #d7d9dd;
+}
+.shot-dot {
+  width: 15px; height: 15px; border-radius: 50%;
+  background: #19c37d; flex: none;
+}
+.shot-amt {
+  font-size: 1.45rem; font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  margin: 10px 0 12px;
+}
+.shot-body.bankapp dl div { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.shot-body.bankapp dt { color: #8a8f95; }
+.shot-body.bankapp .link { color: #5b8cff; font-weight: 500; }
+.shot-body.bankapp .dim { color: #6d727a; font-weight: 500; }
+
+/* 카드 하단 노란 금액 띠 */
+.proof-shot figcaption {
+  background: #0b0b0d; color: #ffd54f;
   font-family: var(--font-display); font-weight: 400;
   font-variant-numeric: tabular-nums;
-  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
-  color: var(--orange);
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(238, 99, 37, 0.35);
-  border-radius: 12px; padding: 12px 20px;
+  font-size: 1.4rem; text-align: center;
+  padding: 12px 8px;
 }
-.proof-list small { font-size: 0.65em; color: #e2e4e6; margin-left: 2px; }
 .proof-note {
   margin-top: 22px; font-size: 0.95rem; color: #cfd2d5;
   border-top: 1px dashed rgba(255, 255, 255, 0.18); padding-top: 18px;
@@ -655,6 +707,7 @@ ul, ol { list-style: none; }
   .about-grid, .culture-grid { grid-template-columns: repeat(2, 1fr); }
   .process-steps { grid-template-columns: repeat(2, 1fr); }
   .benefit-grid { grid-template-columns: repeat(3, 1fr); }
+  .proof-grid { grid-template-columns: repeat(2, 1fr); }
   .location-grid { grid-template-columns: repeat(2, 1fr); }
   .apply-inner { grid-template-columns: 1fr; gap: 40px; }
   .footer-inner { flex-direction: column; text-align: center; }
@@ -679,6 +732,7 @@ ul, ol { list-style: none; }
   .pay-grid { grid-template-columns: 1fr; }
   .benefit-grid { grid-template-columns: repeat(2, 1fr); }
   .benefit-lines { grid-template-columns: 1fr; }
+  .proof-grid { grid-template-columns: 1fr; }
   .growth-steps { flex-direction: column; }
   .growth-steps li, .growth-steps li:first-child {
     clip-path: none; border-radius: 10px; padding: 16px 20px;
