@@ -11,7 +11,8 @@
   --gray-bg: #f5f4f2;
   --line: #e4e1dd;
   --white: #ffffff;
-  --font-display: "Black Han Sans", "Archivo Black", sans-serif;
+  --font-display: "Black Han Sans", sans-serif;
+  --font-logo: "Alfa Slab One", "Black Han Sans", serif;
   --font-body: "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
   --radius: 14px;
   --shadow: 0 8px 28px rgba(35, 39, 44, 0.1);
@@ -35,11 +36,11 @@ ul, ol { list-style: none; }
 
 /* ---------- 로고 배지 (SVG) ---------- */
 .badge-letter {
-  font-family: var(--font-display);
-  font-size: 148px;
+  font-family: var(--font-logo);
+  font-size: 132px;
   fill: var(--orange);
 }
-.badge-m { font-size: 182px; }
+.badge-m { font-size: 162px; }
 .brand-badge { width: 42px; height: 42px; flex: none; }
 
 /* ---------- 헤더 ---------- */
@@ -55,8 +56,8 @@ ul, ol { list-style: none; }
 }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand-word {
-  font-family: var(--font-display);
-  color: var(--white); font-size: 1.15rem; letter-spacing: 0.02em;
+  font-family: var(--font-logo);
+  color: var(--white); font-size: 1.05rem; letter-spacing: 0.02em;
 }
 .brand-word em { font-style: normal; color: var(--orange); }
 .brand-word small { color: var(--orange); font-size: 0.7em; }
@@ -146,9 +147,9 @@ ul, ol { list-style: none; }
   50% { transform: translateY(-12px); }
 }
 .hero-wordmark {
-  font-family: var(--font-display);
-  color: var(--orange); font-size: clamp(1.8rem, 3.4vw, 2.6rem);
-  line-height: 1.05; margin-top: 18px; letter-spacing: 0.03em;
+  font-family: var(--font-logo);
+  color: var(--orange); font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  line-height: 1.15; margin-top: 18px; letter-spacing: 0.03em;
 }
 
 /* ---------- 공통 섹션 ---------- */
@@ -405,6 +406,34 @@ ul, ol { list-style: none; }
 }
 .form-hint { font-size: 0.8rem; color: #82868b; text-align: center; }
 
+/* ---------- 카카오톡 채널 ---------- */
+.btn-kakao {
+  background: #fee500; color: #191919;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-kakao:hover { background: #f4dc00; }
+.kakao-icon { width: 20px; height: 20px; fill: currentColor; flex: none; }
+
+.kakao-float {
+  position: fixed; right: 22px; bottom: 22px; z-index: 90;
+  display: flex; align-items: center; gap: 8px;
+  background: #fee500; color: #191919;
+  padding: 13px 20px; border-radius: 999px;
+  font-weight: 900; font-size: 0.94rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.kakao-float:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+}
+.kakao-float .kakao-icon { width: 22px; height: 22px; }
+@media (max-width: 720px) {
+  .kakao-float { right: 14px; bottom: 14px; padding: 12px 16px; }
+  .kakao-float span { display: none; }
+  .kakao-float .kakao-icon { width: 26px; height: 26px; }
+}
+
 /* ---------- 푸터 ---------- */
 .site-footer {
   background: var(--charcoal-deep); color: #b9bec3; padding: 48px 0;
@@ -417,7 +446,7 @@ ul, ol { list-style: none; }
 .footer-brand { display: flex; align-items: center; gap: 14px; }
 .footer-brand .brand-badge { width: 54px; height: 54px; }
 .footer-logo {
-  font-family: var(--font-display); color: var(--white); font-size: 1.2rem;
+  font-family: var(--font-logo); color: var(--white); font-size: 1.1rem;
 }
 .footer-slogan { font-size: 0.85rem; color: #82868b; }
 .footer-info { font-size: 0.88rem; text-align: right; }
