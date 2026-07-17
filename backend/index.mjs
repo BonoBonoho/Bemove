@@ -124,6 +124,18 @@ export const handler = async (event) => {
         }
       }
 
+      // AI 지원자 분석 — 지원 메시지 요약·평가 포인트·면접 질문 제안
+      if (method === "POST" && path === "/admin/analyze") {
+        if (!ANTHROPIC_API_KEY) return res(400, { error: "NO_KEY" });
+        try {
+          const text = await analyzeApplicant(body.app || {});
+          return res(200, { text });
+        } catch (e) {
+          console.error("AI analyze:", e);
+          return res(502, { error: "AI_FAIL" });
+        }
+      }
+
       const appMatch = path.match(/^\/admin\/applications\/([\w-]+)$/);
       if (appMatch) {
         const id = appMatch[1];
@@ -140,6 +152,7 @@ export const handler = async (event) => {
             sets.push("onboarding = :ob");
             vals[":ob"] = body.onboarding.slice(0, 20).map((k) => String(k).slice(0, 40));
           }
+          if (typeof body.aiNote === "string") { sets.push("aiNote = :ai"); vals[":ai"] = body.aiNote.slice(0, 3000); }
           if (!sets.length) return res(400, { error: "변경할 내용 없음" });
           sets.push("updatedAt = :u"); vals[":u"] = new Date().toISOString();
           const params = {
@@ -212,6 +225,34 @@ async function generateJobPost(job, channel, siteUrl) {
     (job.tags && job.tags.length ? "- 태그: " + job.tags.join(", ") + "\n" : "") +
     (siteUrl ? "- 지원 링크(반드시 포함): " + siteUrl + "\n" : "");
 
+  return askClaude(BRAND_CONTEXT, userPrompt, 1500);
+}
+
+const ANALYZE_CONTEXT = `당신은 비무브짐24(울산·양산·대구 10개 지점 24시간 피트니스)의 채용 담당자를 돕는 어시스턴트입니다.
+지원자 정보를 보고 채용 담당자가 전화 스크리닝·면접에서 바로 쓸 수 있게 분석해주세요.
+
+[출력 형식 — 이 구조 그대로, 전체 350자 이내로 간결하게]
+📌 요약: (지원자를 한두 문장으로)
+💪 강점: (공고 직무 관점에서 눈에 띄는 점)
+❓ 확인 포인트: (면접에서 검증해야 할 리스크·공백)
+🎤 추천 질문: (이 지원자에게 맞춘 면접 질문 2개)
+
+[규칙]
+- 지원 메시지에 없는 경력·자격을 추정해 단정하지 말 것 (추정은 "~로 보임"으로 표시)
+- 성별·나이·출신 등 차별적 판단 금지, 직무 관련성만 평가`;
+
+async function analyzeApplicant(app) {
+  const userPrompt =
+    "다음 지원자를 분석해주세요.\n\n" +
+    "- 이름: " + String(app.name || "").slice(0, 60) + "\n" +
+    "- 지원 직무: " + String(app.role || "").slice(0, 40) + "\n" +
+    "- 지원 지점: " + String(app.branch || "").slice(0, 40) + "\n" +
+    "- 지원 메시지: " + String(app.message || "(없음)").slice(0, 2000) + "\n" +
+    (app.memo ? "- 담당자 메모: " + String(app.memo).slice(0, 2000) + "\n" : "");
+  return askClaude(ANALYZE_CONTEXT, userPrompt, 800);
+}
+
+async function askClaude(system, userPrompt, maxTokens) {
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -221,8 +262,8 @@ async function generateJobPost(job, channel, siteUrl) {
     },
     body: JSON.stringify({
       model: "claude-opus-4-8",
-      max_tokens: 1500,
-      system: BRAND_CONTEXT,
+      max_tokens: maxTokens,
+      system: system,
       messages: [{ role: "user", content: userPrompt }],
     }),
   });

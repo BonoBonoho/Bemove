@@ -223,11 +223,18 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
 .ai-sec { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
 .ai-sec-head { display: flex; align-items: center; justify-content: space-between; }
 .ai-sec-head h4 { font-size: 0.9rem; color: var(--orange-dark); }
-.ai-sec textarea {
+.ai-sec textarea, #aiAppOut {
   border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 12px;
   font-size: 0.85rem; font-family: inherit; line-height: 1.55;
   background: #fafaf9; resize: vertical; white-space: pre-wrap;
 }
+
+/* 카드에 저장된 AI 분석 (접이식) */
+.kc-ai {
+  background: #f4f0ff; border-radius: 6px; padding: 6px 8px; color: #5a4a9e;
+}
+.kc-ai summary { cursor: pointer; font-weight: 700; font-size: 0.76rem; }
+.kc-ai div { margin-top: 6px; white-space: pre-wrap; word-break: break-all; font-size: 0.78rem; }
 
 /* 온보딩 체크리스트 */
 .ob-panel { width: 480px; }

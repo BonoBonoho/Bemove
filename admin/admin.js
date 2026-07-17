@@ -177,6 +177,10 @@
 
   /* ---------- AI 공고문 생성 ---------- */
   var AI_CHANNELS = ["알바천국", "사람인·잡코리아", "인스타그램"];
+  var AI_KEY_GUIDE = "⚠️ AI 키가 아직 설정되지 않았습니다.\n\n" +
+    "console.anthropic.com에서 API 키를 발급한 뒤,\n" +
+    "터미널에서 아래처럼 한 번 배포하면 활성화됩니다:\n" +
+    "./infra/deploy.sh ap-northeast-2 '어드민토큰' 'sk-ant-발급받은키'";
 
   function openAiGen(j) {
     if (!j) return;
@@ -199,8 +203,7 @@
           if (btn) btn.disabled = false;
         })
         .catch(function (err) {
-          $("aiOut" + i).value = err.message === "HTTP 400"
-            ? "⚠️ AI 키가 아직 설정되지 않았습니다.\n\nconsole.anthropic.com에서 API 키를 발급한 뒤,\n터미널에서 아래처럼 한 번 배포하면 활성화됩니다:\n./infra/deploy.sh ap-northeast-2 '어드민토큰' 'sk-ant-발급받은키'"
+          $("aiOut" + i).value = err.message === "HTTP 400" ? AI_KEY_GUIDE
             : "생성에 실패했습니다 (" + err.message + ").\n닫았다가 다시 시도해주세요.";
         });
     });
@@ -340,6 +343,7 @@
       '<p class="kc-phone"><a href="tel:' + esc(a.phone) + '">' + esc(a.phone) + "</a></p>" +
       (a.message ? '<p class="kc-msg">' + esc(a.message) + "</p>" : "") +
       (a.memo ? '<p class="kc-memo">📝 ' + esc(a.memo) + "</p>" : "") +
+      (a.aiNote ? '<details class="kc-ai"><summary>🤖 AI 분석</summary><div>' + esc(a.aiNote) + "</div></details>" : "") +
       obBadge +
       '<p class="kc-date">' + d + (slaWarn ? ' · <b class="warn-txt">48h 초과</b>' : "") + "</p>" +
       '<div class="kc-actions">' +
@@ -347,6 +351,7 @@
       (si < STAGES.length - 2 ? '<button data-move="1" data-id="' + a.id + '">다음 ▶</button>' : "") +
       '<button data-score="' + a.id + '">★점수</button>' +
       '<button data-memo="' + a.id + '">메모</button>' +
+      '<button data-analyze="' + a.id + '">🤖 AI</button>' +
       (STAGES[si] === "합격·입사" ? '<button data-ob="' + a.id + '">온보딩</button>' : "") +
       (si !== STAGES.length - 1 ? '<button data-fail="' + a.id + '">불합격</button>' : "") +
       "</div></div>";
@@ -355,7 +360,7 @@
   $("kanban").addEventListener("click", function (e) {
     var b = e.target.closest("button");
     if (!b) return;
-    var id = b.dataset.id || b.dataset.fail || b.dataset.memo || b.dataset.score || b.dataset.ob;
+    var id = b.dataset.id || b.dataset.fail || b.dataset.memo || b.dataset.score || b.dataset.ob || b.dataset.analyze;
     var app = apps.find(function (a) { return a.id === id; });
     if (!app) return;
 
@@ -378,7 +383,48 @@
       }
     } else if (b.dataset.ob) {
       openOnboarding(app);
+    } else if (b.dataset.analyze) {
+      openAiAnalyze(app);
     }
+  });
+
+  /* ---------- AI 지원자 분석 ---------- */
+  var aiAppId = null;
+
+  function openAiAnalyze(app) {
+    aiAppId = app.id;
+    $("aiAppName").textContent = app.name;
+    var out = $("aiAppOut");
+    out.value = app.aiNote || "⏳ 분석 중입니다… (10초 정도 걸립니다)";
+    $("aiAppSave").disabled = true;
+    $("aiAppWrap").hidden = false;
+    call("POST", "/admin/analyze", {
+      app: { name: app.name, role: app.role, branch: app.branch, message: app.message, memo: app.memo },
+    })
+      .then(function (r) {
+        out.value = r.text || "";
+        $("aiAppSave").disabled = false;
+      })
+      .catch(function (err) {
+        out.value = err.message === "HTTP 400" ? AI_KEY_GUIDE
+          : "분석에 실패했습니다 (" + err.message + ").\n닫았다가 다시 시도해주세요.";
+      });
+  }
+
+  $("aiAppSave").addEventListener("click", function () {
+    if (!aiAppId) return;
+    call("PUT", "/admin/applications/" + aiAppId, { aiNote: $("aiAppOut").value })
+      .then(function () {
+        $("aiAppWrap").hidden = true;
+        aiAppId = null;
+        loadApps();
+      })
+      .catch(function (err) { alert("저장 실패: " + err.message); });
+  });
+
+  $("aiAppClose").addEventListener("click", function () {
+    $("aiAppWrap").hidden = true;
+    aiAppId = null;
   });
 
   /* ---------- 온보딩 체크리스트 ---------- */
