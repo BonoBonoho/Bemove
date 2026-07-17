@@ -42,6 +42,26 @@ jobs:
             --zip-file fileb:///tmp/backend.zip >/dev/null
           echo "Lambda 코드 갱신 완료"
 
+      - name: AI 키 적용 (ANTHROPIC_API_KEY 시크릿이 등록된 경우에만)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY 시크릿 없음 — 건너뜀 (AI 기능 비활성)"
+            exit 0
+          fi
+          # 코드 갱신이 끝날 때까지 대기 후, 기존 환경변수를 유지하며 키만 병합
+          aws lambda wait function-updated --function-name "$LAMBDA_NAME"
+          ENV_JSON=$(aws lambda get-function-configuration \
+            --function-name "$LAMBDA_NAME" --query 'Environment.Variables' --output json)
+          NEW_ENV=$(echo "$ENV_JSON" | jq -c --arg k "$ANTHROPIC_API_KEY" \
+            '. + {ANTHROPIC_API_KEY:$k} | {Variables:.}')
+          # AI 생성이 10~20초 걸리므로 타임아웃도 함께 상향
+          aws lambda update-function-configuration \
+            --function-name "$LAMBDA_NAME" \
+            --environment "$NEW_ENV" --timeout 28 >/dev/null
+          echo "ANTHROPIC_API_KEY 적용 + 타임아웃 28초 설정 완료"
+
       - name: 배포 결과
         run: |
           echo "✅ 배포 완료"
