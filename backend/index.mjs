@@ -42,6 +42,11 @@ export const handler = async (event) => {
 
   try {
     /* ---------- 공개 엔드포인트 ---------- */
+    // 상태 확인 — AI 키는 값이 아닌 '설정 여부'만 노출
+    if (method === "GET" && path === "/health") {
+      return res(200, { ok: true, ai: Boolean(ANTHROPIC_API_KEY) });
+    }
+
     if (method === "GET" && path === "/jobs") {
       const { Items = [] } = await db.send(new ScanCommand({ TableName: JOBS_TABLE }));
       const today = todayKST();
