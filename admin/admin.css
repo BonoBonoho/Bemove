@@ -216,6 +216,19 @@ main { max-width: 1240px; margin: 0 auto; padding: 22px 20px 60px; }
   border-color: var(--orange); background: rgba(238,99,37,0.08); font-weight: 700;
 }
 
+/* AI 공고문 생성 */
+.btn-sm.ai { background: linear-gradient(135deg, var(--orange), #f5a623); }
+.ai-panel { width: 660px; }
+.ai-hint { font-size: 0.84rem; color: #6a6f75; }
+.ai-sec { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.ai-sec-head { display: flex; align-items: center; justify-content: space-between; }
+.ai-sec-head h4 { font-size: 0.9rem; color: var(--orange-dark); }
+.ai-sec textarea {
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  font-size: 0.85rem; font-family: inherit; line-height: 1.55;
+  background: #fafaf9; resize: vertical; white-space: pre-wrap;
+}
+
 /* 온보딩 체크리스트 */
 .ob-panel { width: 480px; }
 .ob-group h4 { font-size: 0.85rem; color: var(--orange-dark); margin-bottom: 8px; }

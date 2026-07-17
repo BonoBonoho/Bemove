@@ -123,7 +123,8 @@
         (j.note ? " · 📝 " + esc(j.note) : "") + "</span>" +
         '<span class="jr-actions">' +
         '<button class="btn-sm" data-edit="' + j.id + '">수정</button>' +
-        '<button class="btn-sm ghost" data-copy="' + j.id + '">공고문 복사</button>' +
+        '<button class="btn-sm ai" data-ai="' + j.id + '">✨ AI 공고문</button>' +
+        '<button class="btn-sm ghost" data-copy="' + j.id + '">기본문 복사</button>' +
         '<button class="btn-sm ghost" data-del="' + j.id + '">삭제</button>' +
         "</span></div>";
     }).join("");
@@ -133,8 +134,10 @@
     var ed = e.target.closest("[data-edit]");
     var del = e.target.closest("[data-del]");
     var cp = e.target.closest("[data-copy]");
+    var ai = e.target.closest("[data-ai]");
     if (ed) openJobForm(jobs.find(function (j) { return j.id === ed.dataset.edit; }));
     if (cp) copyJobText(jobs.find(function (j) { return j.id === cp.dataset.copy; }));
+    if (ai) openAiGen(jobs.find(function (j) { return j.id === ai.dataset.ai; }));
     if (del && confirm("이 공고를 삭제할까요? 사이트에서 즉시 내려갑니다.")) {
       call("DELETE", "/admin/jobs/" + del.dataset.del).then(loadJobs);
     }
@@ -171,6 +174,53 @@
     }
     document.body.removeChild(ta);
   }
+
+  /* ---------- AI 공고문 생성 ---------- */
+  var AI_CHANNELS = ["알바천국", "사람인·잡코리아", "인스타그램"];
+
+  function openAiGen(j) {
+    if (!j) return;
+    $("aiJobTitle").textContent = j.title;
+    var box = $("aiSections");
+    box.innerHTML = AI_CHANNELS.map(function (ch, i) {
+      return '<div class="ai-sec">' +
+        '<div class="ai-sec-head"><h4>' + esc(ch) + "</h4>" +
+        '<button type="button" class="btn-sm" data-aicopy="' + i + '" disabled>복사</button></div>' +
+        '<textarea id="aiOut' + i + '" rows="9" readonly>⏳ 생성 중입니다… (10~20초 정도 걸립니다)</textarea>' +
+        "</div>";
+    }).join("");
+    $("aiWrap").hidden = false;
+    // 채널 3개를 병렬 생성 — 각각 끝나는 대로 표시
+    AI_CHANNELS.forEach(function (ch, i) {
+      call("POST", "/admin/generate", { channel: ch, job: j, siteUrl: location.origin + "/" })
+        .then(function (r) {
+          $("aiOut" + i).value = r.text || "";
+          var btn = box.querySelector('[data-aicopy="' + i + '"]');
+          if (btn) btn.disabled = false;
+        })
+        .catch(function (err) {
+          $("aiOut" + i).value = err.message === "HTTP 400"
+            ? "⚠️ AI 키가 아직 설정되지 않았습니다.\n\nconsole.anthropic.com에서 API 키를 발급한 뒤,\n터미널에서 아래처럼 한 번 배포하면 활성화됩니다:\n./infra/deploy.sh ap-northeast-2 '어드민토큰' 'sk-ant-발급받은키'"
+            : "생성에 실패했습니다 (" + err.message + ").\n닫았다가 다시 시도해주세요.";
+        });
+    });
+  }
+
+  $("aiSections") && $("aiSections").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-aicopy]");
+    if (!b) return;
+    var ta = $("aiOut" + b.dataset.aicopy);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      b.textContent = "✓ 복사됨";
+      setTimeout(function () { b.textContent = "복사"; }, 1500);
+    } catch (err) {
+      prompt("아래 내용을 직접 복사하세요:", ta.value);
+    }
+  });
+
+  $("aiClose").addEventListener("click", function () { $("aiWrap").hidden = true; });
 
   $("newJobBtn").addEventListener("click", function () { openJobForm(null); });
   $("jobCancelBtn").addEventListener("click", function () { $("jobFormWrap").hidden = true; });

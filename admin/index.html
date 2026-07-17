@@ -53,6 +53,18 @@
       </div>
       <div id="jobList" class="job-table"></div>
 
+      <!-- AI 공고문 생성 결과 -->
+      <div id="aiWrap" class="form-overlay" hidden>
+        <div class="job-form ai-panel">
+          <h3>✨ AI 공고문 생성 — <span id="aiJobTitle"></span></h3>
+          <p class="ai-hint">채널별 맞춤 공고문을 AI가 작성합니다. 복사해서 각 사이트 등록 화면에 붙여넣으세요.</p>
+          <div id="aiSections"></div>
+          <div class="form-actions">
+            <button type="button" id="aiClose" class="btn-sm ghost">닫기</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 공고 편집 폼 -->
       <div id="jobFormWrap" class="form-overlay" hidden>
         <form id="jobForm" class="job-form">

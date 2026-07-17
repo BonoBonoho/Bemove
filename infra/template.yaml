@@ -12,6 +12,11 @@ Parameters:
     Type: String
     NoEcho: true
     Description: 어드민 페이지 인증 토큰
+  AnthropicApiKey:
+    Type: String
+    NoEcho: true
+    Default: ""
+    Description: AI 공고문 생성용 Anthropic API 키 (없으면 AI 기능만 비활성)
 
 Resources:
   JobsTable:
@@ -71,7 +76,8 @@ Resources:
       FunctionName: bemove-recruit-api
       Runtime: nodejs20.x
       Handler: index.handler
-      Timeout: 10
+      # AI 공고문 생성이 10~20초 걸리므로 여유 확보 (API Gateway 한도 30초 이내)
+      Timeout: 28
       MemorySize: 256
       Role: !GetAtt FnRole.Arn
       Code:
@@ -82,6 +88,7 @@ Resources:
           JOBS_TABLE: !Ref JobsTable
           APPS_TABLE: !Ref AppsTable
           ADMIN_TOKEN: !Ref AdminToken
+          ANTHROPIC_API_KEY: !Ref AnthropicApiKey
 
   HttpApi:
     Type: AWS::ApiGatewayV2::Api
