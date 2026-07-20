@@ -1,0 +1,68 @@
+name: AWS 자동 배포
+
+# 이 브랜치에 푸시될 때마다 사이트(S3)와 백엔드(Lambda)를 자동 배포합니다.
+on:
+  push:
+    branches:
+      - main
+      - claude/bemove-gym-recruitment-site-apprtq
+  workflow_dispatch: {}
+
+env:
+  AWS_REGION: ap-northeast-2
+  SITE_BUCKET: bemove-recruit-site-624627264933
+  LAMBDA_NAME: bemove-recruit-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: AWS 자격 증명 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 사이트 업로드 (S3)
+        run: |
+          aws s3 sync . "s3://$SITE_BUCKET" \
+            --exclude ".git/*" --exclude ".github/*" \
+            --exclude "backend/*" --exclude "infra/*" \
+            --exclude "banners/*.html" --exclude "*.md" --delete
+
+      - name: 백엔드 갱신 (Lambda)
+        run: |
+          cd backend && zip -q -r /tmp/backend.zip index.mjs
+          aws lambda update-function-code \
+            --function-name "$LAMBDA_NAME" \
+            --zip-file fileb:///tmp/backend.zip >/dev/null
+          echo "Lambda 코드 갱신 완료"
+
+      - name: AI 키 적용 (ANTHROPIC_API_KEY 시크릿이 등록된 경우에만)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY 시크릿 없음 — 건너뜀 (AI 기능 비활성)"
+            exit 0
+          fi
+          # 코드 갱신이 끝날 때까지 대기 후, 기존 환경변수를 유지하며 키만 병합
+          aws lambda wait function-updated --function-name "$LAMBDA_NAME"
+          ENV_JSON=$(aws lambda get-function-configuration \
+            --function-name "$LAMBDA_NAME" --query 'Environment.Variables' --output json)
+          NEW_ENV=$(echo "$ENV_JSON" | jq -c --arg k "$ANTHROPIC_API_KEY" \
+            '. + {ANTHROPIC_API_KEY:$k} | {Variables:.}')
+          # AI 생성이 10~20초 걸리므로 타임아웃도 함께 상향
+          aws lambda update-function-configuration \
+            --function-name "$LAMBDA_NAME" \
+            --environment "$NEW_ENV" --timeout 28 >/dev/null
+          echo "ANTHROPIC_API_KEY 적용 + 타임아웃 28초 설정 완료"
+
+      - name: 배포 결과
+        run: |
+          echo "✅ 배포 완료"
+          echo "사이트: http://$SITE_BUCKET.s3-website.$AWS_REGION.amazonaws.com"

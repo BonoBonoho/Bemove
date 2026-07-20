@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>비무브짐 채용 어드민</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" href="../assets/logo-badge.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <header class="adm-header">
+    <div class="adm-brand">
+      <img src="../assets/logo-badge.png" alt="" />
+      <h1>비무브짐 채용 어드민</h1>
+    </div>
+    <div class="adm-header-right">
+      <span id="apiStatus" class="api-status">API 미설정</span>
+      <button id="logoutBtn" class="btn-sm ghost" hidden>로그아웃</button>
+    </div>
+  </header>
+
+  <!-- 로그인 -->
+  <section id="loginView" class="login-view">
+    <div class="login-card">
+      <h2>관리자 로그인</h2>
+      <p>배포 시 설정한 어드민 토큰을 입력하세요.</p>
+      <input type="password" id="tokenInput" placeholder="어드민 토큰" autocomplete="current-password" />
+      <button id="loginBtn" class="btn-main">로그인</button>
+      <p class="login-err" id="loginErr" hidden>인증에 실패했습니다. 토큰을 확인해주세요.</p>
+      <p class="login-hint">API 주소가 설정되지 않았다면 <code>js/config.js</code>의 <code>apiUrl</code>을 먼저 채워주세요.</p>
+    </div>
+  </section>
+
+  <!-- 메인 -->
+  <main id="mainView" hidden>
+    <nav class="adm-tabs">
+      <button class="tab active" data-tab="jobs">📣 공고 관리</button>
+      <button class="tab" data-tab="apps">👤 지원자 파이프라인</button>
+      <button id="refreshBtn" class="btn-sm">새로고침</button>
+    </nav>
+
+    <!-- 공고 관리 -->
+    <section id="jobsTab" class="tab-panel">
+      <div class="panel-head">
+        <h2>채용 공고 <small>저장하면 사이트에 즉시 게시됩니다</small></h2>
+        <div class="panel-actions">
+          <button id="importBtn" class="btn-sm ghost">🧪 홈페이지 예시 공고 가져오기</button>
+          <button id="newJobBtn" class="btn-main">+ 새 공고</button>
+        </div>
+      </div>
+      <div id="jobList" class="job-table"></div>
+
+      <!-- AI 공고문 생성 결과 -->
+      <div id="aiWrap" class="form-overlay" hidden>
+        <div class="job-form ai-panel">
+          <h3>✨ AI 공고문 생성 — <span id="aiJobTitle"></span></h3>
+          <p class="ai-hint">채널별 맞춤 공고문을 AI가 작성합니다. 복사해서 각 사이트 등록 화면에 붙여넣으세요.</p>
+          <div id="aiSections"></div>
+          <div class="form-actions">
+            <button type="button" id="aiClose" class="btn-sm ghost">닫기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 공고 편집 폼 -->
+      <div id="jobFormWrap" class="form-overlay" hidden>
+        <form id="jobForm" class="job-form">
+          <h3 id="jobFormTitle">새 공고</h3>
+          <label>공고명 <input name="title" required placeholder="트레이너 채용 — 야음점" /></label>
+          <div class="row2">
+            <label>직무
+              <select name="role">
+                <option>트레이너</option><option>FC/상담</option>
+                <option>GX 강사</option><option>청소/시설</option>
+              </select>
+            </label>
+            <label>지점 <select name="branch" id="jobBranchSel"></select></label>
+          </div>
+          <div class="row2">
+            <label>고용형태
+              <select name="type">
+                <option>프리랜서</option><option>정규직</option>
+                <option>파트타임</option><option>계약직</option>
+              </select>
+            </label>
+            <label>모집 인원 <input name="headcount" type="number" min="1" value="1" /></label>
+          </div>
+          <div class="row2">
+            <label>게시일 <input name="posted" type="date" /></label>
+            <label>마감일 <input name="deadline" type="date" required /></label>
+          </div>
+          <label>설명 <textarea name="desc" rows="3" placeholder="공고 설명"></textarea></label>
+          <label>태그 (쉼표 구분) <input name="tags" placeholder="인센티브, 시연" /></label>
+          <label>게시 채널
+            <div class="channel-chips" id="channelChips">
+              <label class="ch"><input type="checkbox" value="사람인" />사람인</label>
+              <label class="ch"><input type="checkbox" value="잡코리아" />잡코리아</label>
+              <label class="ch"><input type="checkbox" value="알바천국" />알바천국</label>
+              <label class="ch"><input type="checkbox" value="워크넷" />워크넷</label>
+              <label class="ch"><input type="checkbox" value="인스타그램" />인스타그램</label>
+              <label class="ch"><input type="checkbox" value="당근" />당근</label>
+              <label class="ch"><input type="checkbox" value="지인 추천" />지인 추천</label>
+              <label class="ch"><input type="checkbox" value="현수막" />현수막</label>
+            </div>
+          </label>
+          <label>비고 (내부용 — 사이트에 노출되지 않음) <input name="note" placeholder="예: 주 5일 교대, 채용목표 8/15" /></label>
+          <label class="chk"><input type="checkbox" name="active" checked /> 게시 상태 (끄면 사이트에서 숨김)</label>
+          <div class="form-actions">
+            <button type="submit" class="btn-main">저장 → 즉시 게시</button>
+            <button type="button" id="jobCancelBtn" class="btn-sm ghost">취소</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 지원자 파이프라인 -->
+    <section id="appsTab" class="tab-panel" hidden>
+      <div class="panel-head">
+        <h2>지원자 파이프라인 <small>지원 폼으로 접수된 지원·문의가 실시간으로 쌓입니다</small></h2>
+      </div>
+
+      <div id="statsBar" class="stats-bar"></div>
+
+      <details class="guide-box">
+        <summary>🗣️ 면접 질문 가이드 <small>서류 검토 48h · 전화 연락 24h — 속도가 곧 경쟁력</small></summary>
+        <div class="guide-cols">
+          <div>
+            <h4>공통 질문</h4>
+            <ul>
+              <li>비무브짐24를 어떻게 알게 되었나요? 지원 동기는?</li>
+              <li>1년 뒤 본인의 목표는 무엇인가요?</li>
+              <li>가장 힘들었던 회원/고객 경험과 어떻게 대응했나요?</li>
+              <li>매출·목표 압박에 대해 어떻게 생각하나요?</li>
+              <li>근무 가능한 시간·요일, 통근 거리는?</li>
+              <li>장기 근속 의지가 있나요? (1년 이상)</li>
+            </ul>
+          </div>
+          <div>
+            <h4>직무별 심화</h4>
+            <ul>
+              <li><b>트레이너</b> — PT 세일즈(OT 클로징) 경험과 본인만의 방식은? 회원 이탈을 줄인 사례는?</li>
+              <li><b>FC</b> — 등록 전환을 높인 경험은? 동시에 여러 업무를 처리한 방식은?</li>
+              <li><b>지점장/팀장</b> — 팀원 동기부여·갈등 관리 경험은? 목표 미달 시 회복 방법은?</li>
+            </ul>
+            <p class="guide-tip">💡 면접 평가는 그날 바로 카드의 점수·메모에 기록하세요. 기억은 사라집니다.</p>
+          </div>
+        </div>
+      </details>
+
+      <div id="kanban" class="kanban"></div>
+
+      <!-- AI 지원자 분석 오버레이 -->
+      <div id="aiAppWrap" class="form-overlay" hidden>
+        <div class="job-form ai-panel">
+          <h3>🤖 AI 지원자 분석 — <span id="aiAppName"></span></h3>
+          <p class="ai-hint">지원 메시지를 요약하고 면접에서 확인할 포인트·추천 질문을 제안합니다.</p>
+          <textarea id="aiAppOut" rows="13" readonly></textarea>
+          <div class="form-actions">
+            <button type="button" id="aiAppSave" class="btn-main" disabled>💾 카드에 저장</button>
+            <button type="button" id="aiAppClose" class="btn-sm ghost">닫기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 온보딩 체크리스트 오버레이 -->
+      <div id="obWrap" class="form-overlay" hidden>
+        <div class="job-form ob-panel">
+          <h3>🚀 입사·온보딩 체크리스트 — <span id="obName"></span></h3>
+          <div class="ob-group">
+            <h4>제출 서류</h4>
+            <div id="obDocs" class="ob-list"></div>
+          </div>
+          <div class="ob-group">
+            <h4>입사 처리 (본사/실장)</h4>
+            <div id="obTasks" class="ob-list"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="obClose" class="btn-main">닫기 (자동 저장됨)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
