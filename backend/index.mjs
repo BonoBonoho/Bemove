@@ -125,7 +125,7 @@ export const handler = async (event) => {
           return res(200, { text });
         } catch (e) {
           console.error("AI generate:", e);
-          return res(502, { error: "AI_FAIL" });
+          return res(502, { error: "AI_FAIL", detail: String(e.message || e).slice(0, 300) });
         }
       }
 
@@ -137,7 +137,7 @@ export const handler = async (event) => {
           return res(200, { text });
         } catch (e) {
           console.error("AI analyze:", e);
-          return res(502, { error: "AI_FAIL" });
+          return res(502, { error: "AI_FAIL", detail: String(e.message || e).slice(0, 300) });
         }
       }
 
