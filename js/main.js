@@ -140,6 +140,9 @@
     }).join("");
 
     var branchSelect = document.getElementById("fBranch");
+    // API 공고 갱신 등으로 재호출될 때 중복 추가 방지 — 안내 옵션만 남기고 초기화
+    var kept = branchSelect.value;
+    while (branchSelect.options.length > 1) branchSelect.remove(1);
     BRANCHES.forEach(function (b) {
       var opt = document.createElement("option");
       opt.value = b.name;
@@ -150,6 +153,7 @@
     anyOpt.value = "지점 무관";
     anyOpt.textContent = "지점 무관 (어디든 가능)";
     branchSelect.appendChild(anyOpt);
+    if (kept) branchSelect.value = kept;  // 재렌더 전 선택값 유지
   }
 
   /* ---------- 지원 폼 → API 접수 (미설정 시 mailto) ---------- */
