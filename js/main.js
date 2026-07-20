@@ -57,8 +57,9 @@
     });
 
     empty.hidden = visible.length > 0;
+    lastVisibleJobs = visible;
     list.innerHTML = visible
-      .map(function (job) {
+      .map(function (job, idx) {
         var d = dday(job.deadline);
         var ddayLabel = d === 0 ? "오늘 마감" : "D-" + d;
         var closing = d <= 7 ? " closing" : "";
@@ -66,7 +67,7 @@
           .map(function (t) { return "#" + t; })
           .join("  ");
         return (
-          '<article class="job-card">' +
+          '<article class="job-card" data-idx="' + idx + '">' +
           '<div class="job-card-top">' +
           '<span class="job-badge role">' + job.role + "</span>" +
           '<span class="job-badge branch">' + job.branch + "</span>" +
@@ -100,8 +101,16 @@
     if (apply) {
       // 공고 카드에서 지원하기 → 폼에 직무/지점 미리 선택
       preselectForm(apply.dataset.role, apply.dataset.branch);
+      return;
+    }
+    // 카드 본문 클릭 → 상세 모달
+    var card = e.target.closest(".job-card");
+    if (card && card.dataset.idx != null) {
+      openJobModal(lastVisibleJobs[Number(card.dataset.idx)]);
     }
   });
+
+  var lastVisibleJobs = [];
 
   function preselectForm(role, branch) {
     var roleSelect = document.getElementById("fRole");
@@ -120,6 +129,48 @@
         break;
       }
     }
+  }
+
+  /* ---------- 공고 상세 모달 ---------- */
+  var jobModal = document.getElementById("jobModal");
+
+  function openJobModal(job) {
+    if (!job || !jobModal) return;
+    var d = dday(job.deadline);
+    document.getElementById("jmBadges").innerHTML =
+      '<span class="job-badge role">' + job.role + "</span>" +
+      '<span class="job-badge branch">' + job.branch + "</span>" +
+      '<span class="job-badge type">' + job.type + "</span>" +
+      '<span class="job-dday' + (d <= 7 ? " closing" : "") + '">' + (d === 0 ? "오늘 마감" : "D-" + d) + "</span>";
+    document.getElementById("jmTitle").textContent = job.title;
+    document.getElementById("jmMeta").textContent =
+      "모집 " + job.headcount + "명 · 마감 " + String(job.deadline || "채용 시").replace(/-/g, ".") +
+      ((job.tags || []).length ? " · #" + job.tags.join("  #") : "");
+    document.getElementById("jmDesc").textContent = job.desc || "";
+    var applyBtn = document.getElementById("jmApply");
+    applyBtn.dataset.role = job.role;
+    applyBtn.dataset.branch = job.branch;
+    jobModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeJobModal() {
+    if (!jobModal) return;
+    jobModal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  if (jobModal) {
+    jobModal.addEventListener("click", function (e) {
+      if (e.target === jobModal || e.target.id === "jobModalClose") closeJobModal();
+    });
+    document.getElementById("jmApply").addEventListener("click", function () {
+      preselectForm(this.dataset.role, this.dataset.branch);
+      closeJobModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeJobModal();
+    });
   }
 
   /* ---------- 지점 카드 렌더링 + 폼 지점 옵션 ---------- */

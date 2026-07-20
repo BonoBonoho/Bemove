@@ -802,3 +802,44 @@ ul, ol { list-style: none; }
   .about-grid, .culture-grid, .process-steps, .location-grid { grid-template-columns: 1fr; }
   .hero-stats { gap: 24px; }
 }
+
+/* ================================================================
+   공고 요약 카드 + 상세 모달
+   ================================================================ */
+.job-card { cursor: pointer; }
+.job-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-line;
+}
+.jobmodal-overlay {
+  position: fixed; inset: 0; background: rgba(24, 27, 30, 0.55); z-index: 300;
+  align-items: center; justify-content: center; padding: 24px 16px;
+}
+.jobmodal {
+  position: relative; background: #fff; border-radius: 16px;
+  width: 640px; max-width: 100%; max-height: calc(100vh - 48px);
+  display: flex; flex-direction: column; gap: 12px; padding: 28px;
+  box-shadow: 0 20px 60px rgba(24, 27, 30, 0.35);
+}
+.jobmodal-close {
+  position: absolute; top: 14px; right: 14px; border: 0; background: #f5f4f2;
+  width: 34px; height: 34px; border-radius: 999px; font-size: 1rem;
+  cursor: pointer; color: #6a6f75;
+}
+.jobmodal-close:hover { background: #eceae7; }
+.jobmodal-badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-right: 40px; }
+.jobmodal h3 { font-size: 1.35rem; font-weight: 900; line-height: 1.35; }
+.jobmodal-meta { font-size: 0.85rem; color: #82868b; }
+.jobmodal-desc {
+  white-space: pre-line; line-height: 1.7; color: #3d4248; font-size: 0.95rem;
+  overflow-y: auto; border-top: 1px solid #eceae7; padding-top: 12px;
+}
+.jobmodal-actions { display: flex; justify-content: flex-end; padding-top: 4px; }
+.jobmodal-apply {
+  background: #ee6325; color: #fff; font-weight: 800; text-decoration: none;
+  padding: 13px 28px; border-radius: 999px; font-size: 1rem;
+}
+.jobmodal-apply:hover { background: #d4531a; }

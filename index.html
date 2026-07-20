@@ -572,6 +572,20 @@
     <span>채용 문의</span>
   </a>
 
+  <!-- 공고 상세 모달 (카드 클릭 시 표시) -->
+  <div id="jobModal" class="jobmodal-overlay" style="display:none">
+    <div class="jobmodal" role="dialog" aria-modal="true" aria-labelledby="jmTitle">
+      <button type="button" class="jobmodal-close" id="jobModalClose" aria-label="닫기">✕</button>
+      <div class="jobmodal-badges" id="jmBadges"></div>
+      <h3 id="jmTitle"></h3>
+      <p class="jobmodal-meta" id="jmMeta"></p>
+      <div class="jobmodal-desc" id="jmDesc"></div>
+      <div class="jobmodal-actions">
+        <a href="#apply" class="jobmodal-apply" id="jmApply">이 공고에 지원하기 →</a>
+      </div>
+    </div>
+  </div>
+
   <script src="js/config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
