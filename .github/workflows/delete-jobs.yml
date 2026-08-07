@@ -1,0 +1,48 @@
+# 특정 문구가 설명에 포함된 공고를 DynamoDB에서 삭제하는 1회성 관리 워크플로.
+# 수동 실행 전용 — matches 에 쉼표로 구분한 문구를 넘기면
+# 설명(desc)에 그 문구가 포함된 공고만 삭제하고 목록을 출력한다.
+name: Delete Jobs By Phrase
+on:
+  workflow_dispatch:
+    inputs:
+      matches:
+        description: "삭제할 공고 설명에 포함된 문구 (쉼표 구분)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Scan and delete matching jobs
+        env:
+          MATCHES: ${{ github.event.inputs.matches }}
+        run: |
+          aws dynamodb scan --table-name bemove-jobs --output json > /tmp/jobs.json
+          python3 - <<'EOF'
+          import json, os, subprocess
+          matches = [m.strip() for m in os.environ["MATCHES"].split(",") if m.strip()]
+          items = json.load(open("/tmp/jobs.json"))["Items"]
+          deleted = 0
+          for it in items:
+              desc = it.get("desc", {}).get("S", "")
+              title = it.get("title", {}).get("S", "")
+              jid = it.get("id", {}).get("S", "")
+              if jid and any(m in desc for m in matches):
+                  subprocess.run(["aws", "dynamodb", "delete-item",
+                                  "--table-name", "bemove-jobs",
+                                  "--key", json.dumps({"id": {"S": jid}})], check=True)
+                  print(f"삭제: {title} (id={jid})")
+                  deleted += 1
+          print(f"총 {deleted}건 삭제 / 전체 {len(items)}건 중")
+          EOF
